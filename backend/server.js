@@ -1,3 +1,4 @@
+import path from 'path';
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
@@ -16,8 +17,20 @@ app.use(cors());
 app.use(express.json());
 
 import Product from './models/Product.js';
+import userRoutes from './routes/userRoutes.js';
+import productRoutes from './routes/productRoutes.js';
+import uploadRoutes from './routes/uploadRoutes.js';
+import categoryRoutes from './routes/categoryRoutes.js';
 
 // Routes
+app.use('/api/users', userRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/upload', uploadRoutes);
+app.use('/api/categories', categoryRoutes);
+
+const __dirname = path.resolve();
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
+
 app.get('/', (req, res) => {
     res.send('API is running...');
 });
