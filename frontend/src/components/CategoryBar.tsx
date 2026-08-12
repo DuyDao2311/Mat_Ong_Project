@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 
 interface Category {
@@ -14,6 +15,7 @@ const iconMap: Record<string, React.ReactNode> = {
 
 function CategoryBar() {
   const [categories, setCategories] = useState<Category[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -28,11 +30,21 @@ function CategoryBar() {
     fetchCategories();
   }, []);
 
+  const handleCategoryClick = (categoryName: string) => {
+    navigate(`/products?category=${encodeURIComponent(categoryName)}`);
+  };
+
   return (
     <section className="category-bar" id="category-bar">
       <div className="category-list">
         {categories.map((cat, index) => (
-          <div key={cat._id} className="category-item" id={`category-${index}`}>
+          <div 
+            key={cat._id} 
+            className="category-item" 
+            id={`category-${index}`}
+            onClick={() => handleCategoryClick(cat.name)}
+            style={{ cursor: 'pointer' }}
+          >
             <div className="category-icon">{iconMap[cat.name.toUpperCase()] || iconMap[cat.name] || '📦'}</div>
             <span className="category-name">{cat.name}</span>
           </div>

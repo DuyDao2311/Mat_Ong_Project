@@ -7,6 +7,8 @@ import api from '../services/api';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import ProductCardV2 from '../components/ProductCardV2';
+import { useContext } from 'react';
+import { CartContext } from '../context/CartContext';
 
 function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -17,6 +19,13 @@ function ProductDetailPage() {
   const [selectedWeight, setSelectedWeight] = useState('500g');
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('description');
+  const cartContext = useContext(CartContext) as any;
+
+  const handleAddToCart = () => {
+    if (cartContext?.addToCart) {
+      cartContext.addToCart(product, quantity);
+    }
+  };
 
   const resolveImageUrl = (url: string) => {
     if (!url || url === '/images/sample.jpg') return 'https://placehold.co/600x600?text=No+Image';
@@ -229,7 +238,7 @@ function ProductDetailPage() {
                 </div>
 
                 {/* Add to Cart Button */}
-                <button className="pdp-add-cart-btn" id="pdp-add-to-cart">
+                <button className="pdp-add-cart-btn" id="pdp-add-to-cart" onClick={handleAddToCart}>
                   THÊM VÀO GIỎ HÀNG <IoCartOutline className="pdp-cart-icon" />
                 </button>
               </div>

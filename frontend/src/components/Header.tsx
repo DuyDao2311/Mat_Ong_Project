@@ -2,6 +2,7 @@ import { useState, useContext } from 'react';
 import { FaSearch, FaShoppingCart, FaUser } from "react-icons/fa";
 import { Link, useLocation } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import { CartContext } from '../context/CartContext';
 import logoImg from '../../image/logo/613326243_4319054925046133_8782869459334492277_n.jpg';
 
 function Header() {
@@ -9,6 +10,8 @@ function Header() {
   const authContext = useContext(AuthContext) as any;
   const user = authContext?.user;
   const logout = authContext?.logout;
+  const cartContext = useContext(CartContext) as any;
+  const cartCount = cartContext?.cartItems?.reduce((acc: number, item: any) => acc + item.quantity, 0) || 0;
   const location = useLocation();
 
   return (
@@ -54,10 +57,10 @@ function Header() {
           <button className="header-action-btn" aria-label="Tìm kiếm" id="search-btn">
             <FaSearch size={20} />
           </button>
-          <button className="header-action-btn" aria-label="Giỏ hàng" id="cart-btn">
+          <Link to="/cart" className="header-action-btn" aria-label="Giỏ hàng" id="cart-btn" style={{textDecoration: 'none'}}>
             <FaShoppingCart size={20} />
-            <span className="cart-badge">0</span>
-          </button>
+            <span className="cart-badge">{cartCount}</span>
+          </Link>
           <button
             className="mobile-menu-btn"
             onClick={() => setMobileOpen(!mobileOpen)}

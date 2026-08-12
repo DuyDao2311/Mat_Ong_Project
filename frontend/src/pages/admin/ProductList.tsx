@@ -145,7 +145,7 @@ const ProductList = () => {
                             <tr key={p._id}>
                                 <td>
                                     {p.images?.length > 0 && (
-                                        <img src={`http://localhost:5000${p.images[0]}`} alt={p.name} className="admin-product-img" />
+                                        <img src={p.images[0].startsWith('http') ? p.images[0] : `http://localhost:5000${p.images[0]}`} alt={p.name} className="admin-product-img" />
                                     )}
                                 </td>
                                 <td>{p.name}</td>
@@ -189,7 +189,7 @@ const ProductList = () => {
                                         <input type="file" onChange={uploadFileHandler} className="admin-input" />
                                         {uploading && <p className="text-sm text-blue-500 mt-1">Đang upload...</p>}
                                         {formData.images?.length > 0 && (
-                                            <div className="mt-2 text-sm text-gray-500 truncate">{formData.images[0]}</div>
+                                            <div className="mt-2 text-sm text-green-600 font-medium">✓ Đã tải ảnh lên thành công</div>
                                         )}
                                     </div>
                                     <div className="admin-form-group">

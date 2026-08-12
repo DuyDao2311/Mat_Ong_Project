@@ -3,7 +3,7 @@ import api from '../services/api';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import ProductCardV2 from '../components/ProductCardV2';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { FaChevronDown, FaChevronRight } from 'react-icons/fa';
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 
@@ -14,13 +14,30 @@ function ProductListPage() {
   const productsPerPage = 6;
 
   // Filter states
+  const location = useLocation();
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [priceRange, setPriceRange] = useState({ min: '', max: '' });
-  const [selectedFlavors, setSelectedFlavors] = useState<string[]>([]);
-  const [sortOption] = useState('Bán chạy nhất');
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const categoryQuery = searchParams.get('category');
+    if (categoryQuery) {
+      setSelectedCategories([categoryQuery]);
+    } else {
+      setSelectedCategories([]);
+    }
+    setCurrentPage(1);
+  }, [location.search]);
+  // const [selectedFlavors, setSelectedFlavors] = useState<string[]>([]);
+  const [sortOption, setSortOption] = useState('Bán chạy nhất');
+  const [isSortOpen, setIsSortOpen] = useState(false);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [priceRange]);
 
   const [categories, setCategories] = useState<any[]>([]);
-  const flavors = ['Ngọt Dịu', 'Đậm Đà', 'Thảo Mộc', 'Chua Nhẹ', 'Trái Cây'];
+  // const flavors = ['Ngọt Dịu', 'Đậm Đà', 'Thảo Mộc', 'Chua Nhẹ', 'Trái Cây'];
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -54,31 +71,55 @@ function ProductListPage() {
     setCurrentPage(1);
   };
 
-  const handleFlavorToggle = (flavor: string) => {
-    setSelectedFlavors(prev =>
-      prev.includes(flavor)
-        ? prev.filter(f => f !== flavor)
-        : [...prev, flavor]
-    );
-    setCurrentPage(1);
-  };
+  // const handleFlavorToggle = (flavor: string) => {
+  //   setSelectedFlavors(prev =>
+  //     prev.includes(flavor)
+  //       ? prev.filter(f => f !== flavor)
+  //       : [...prev, flavor]
+  //   );
+  //   setCurrentPage(1);
+  // };
 
   const handleClearFilters = () => {
     setSelectedCategories([]);
     setPriceRange({ min: '', max: '' });
-    setSelectedFlavors([]);
+    // setSelectedFlavors([]);
     setCurrentPage(1);
   };
 
   // Lọc sản phẩm (giả lập trên client vì backend chưa có API lọc chi tiết)
-  const filteredProducts = Array.isArray(products) ? products.filter(() => {
-    // Tạm thời bỏ qua filter category và flavor nếu dữ liệu db chưa chuẩn khớp
-    // Trong thực tế, cần so khớp đúng category.
+  const filteredProducts = Array.isArray(products) ? products.filter((product) => {
+    // Lọc theo danh mục
+    if (selectedCategories.length > 0) {
+      if (!product.category || !selectedCategories.includes(product.category)) {
+        return false;
+      }
+    }
+
+    // Lọc theo khoảng giá
+    const price = product.price || 0;
+    const minPrice = priceRange.min !== '' ? Number(priceRange.min) : 0;
+    const maxPrice = priceRange.max !== '' ? Number(priceRange.max) : Infinity;
+
+    if (price < minPrice || price > maxPrice) {
+      return false;
+    }
+
     return true;
   }) : [];
 
-  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
-  const currentProducts = filteredProducts.slice((currentPage - 1) * productsPerPage, currentPage * productsPerPage);
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
+    if (sortOption === 'Từ thấp đến cao') {
+      return (a.price || 0) - (b.price || 0);
+    }
+    if (sortOption === 'Từ cao đến thấp') {
+      return (b.price || 0) - (a.price || 0);
+    }
+    return 0; // 'Bán chạy nhất' hoặc mặc định
+  });
+
+  const totalPages = Math.ceil(sortedProducts.length / productsPerPage);
+  const currentProducts = sortedProducts.slice((currentPage - 1) * productsPerPage, currentPage * productsPerPage);
 
   return (
     <div className="product-list-page-container">
@@ -136,7 +177,7 @@ function ProductListPage() {
             </div>
           </div>
 
-          <div className="plp-filter-group">
+          {/* <div className="plp-filter-group">
             <h3 className="plp-filter-heading">HƯƠNG VỊ</h3>
             <div className="plp-flavor-chips">
               {flavors.map(flavor => (
@@ -149,7 +190,7 @@ function ProductListPage() {
                 </button>
               ))}
             </div>
-          </div>
+          </div> */}
 
           <button className="plp-clear-btn" onClick={handleClearFilters}>
             Xóa Bộ lọc
@@ -159,14 +200,42 @@ function ProductListPage() {
         {/* MAIN CONTENT */}
         <main className="plp-main">
           <div className="plp-main-header">
-            {/* <div className="plp-count">
-              Hiển thị <strong>{filteredProducts.length}</strong> sản phẩm
-            </div> */}
+            <div className="plp-count">
+              <span className="plp-count-title">Sản phẩm</span>
+              {/* <span className="plp-count-number">({filteredProducts.length})</span> */}
+            </div>
             <div className="plp-sort">
               Sắp xếp:
-              <div className="plp-sort-dropdown">
+              <div
+                className="plp-sort-dropdown"
+                onClick={() => setIsSortOpen(!isSortOpen)}
+              >
                 {sortOption} <FaChevronDown size={10} className="ml-1 text-gray-500" />
               </div>
+
+              {isSortOpen && (
+                <>
+                  <div
+                    className="plp-sort-overlay"
+                    onClick={() => setIsSortOpen(false)}
+                  ></div>
+                  <div className="plp-sort-menu">
+                    {['Bán chạy nhất', 'Giá từ thấp đến cao', 'Giá từ cao đến thấp'].map(option => (
+                      <div
+                        key={option}
+                        className={`plp-sort-option ${sortOption === option ? 'active' : ''}`}
+                        onClick={() => {
+                          setSortOption(option);
+                          setIsSortOpen(false);
+                          setCurrentPage(1);
+                        }}
+                      >
+                        {option}
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
           </div>
 

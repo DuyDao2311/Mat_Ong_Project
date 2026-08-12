@@ -1,3 +1,6 @@
+import { FaHome, FaPhoneAlt } from "react-icons/fa";
+import { IoMdMail } from "react-icons/io";
+
 function Footer() {
   return (
     <footer className="footer-new" id="footer">
@@ -12,18 +15,18 @@ function Footer() {
             </div>
           </div>
           <ul className="contact-list">
-            <li>🏠 Địa Chỉ: 19 Trúc Khê, phường Láng Hạ, quận Đống Đa, Hà Nội</li>
-            <li>📞 Tổng đài hỗ trợ: 091.234.5678</li>
-            <li>✉️ Email: info@matongtunhien.com</li>
+            <li><FaHome size={20} />&nbsp;Địa chỉ: Thôn Đồng Thanh, Xã Đồng Văn, Tỉnh Tuyên Quang</li>
+            <li><FaPhoneAlt size={20} />&nbsp;Tổng đài hỗ trợ: 091.234.5678</li>
+            <li><IoMdMail size={20} />&nbsp;Email: info@matongtunhien.com</li>
           </ul>
-          <div className="footer-badges">
+          {/* <div className="footer-badges">
             <div className="badge-placeholder blue">
               <span>✔</span> ĐÃ THÔNG BÁO BỘ CÔNG THƯƠNG
             </div>
             <div className="badge-placeholder red">
               <span>✔</span> ĐÃ ĐĂNG KÝ BỘ CÔNG THƯƠNG
             </div>
-          </div>
+          </div> */}
         </div>
 
         <div className="footer-col links-col">
@@ -53,13 +56,13 @@ function Footer() {
         <div className="footer-col fanpage-col">
           <h3 className="footer-heading">FANPAGE FACEBOOK</h3>
           <div className="fanpage-placeholder">
-            <div className="fanpage-header">
-               <span className="logo-mini">🐝</span>
-               <div>
-                 <div className="fanpage-name">Mật Ong Nguyên Chất...</div>
-                 <div className="fanpage-likes">f Theo dõi Trang 4k người theo dõi</div>
-               </div>
-            </div>
+            <a href="https://www.facebook.com/profile.php?id=61586230476406" target="_blank" rel="noopener noreferrer" className="fanpage-header" style={{ textDecoration: 'none', color: 'inherit' }}>
+              <span className="logo-mini">🐝</span>
+              <div>
+                <div className="fanpage-name">Mật ong núi đá Đồng Văn - Ngọc Trang</div>
+                {/* <div className="fanpage-likes">Theo dõi Trang</div> */}
+              </div>
+            </a>
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { useLocation, Link, Outlet, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { FaTachometerAlt, FaUsers, FaSignOutAlt, FaBox, FaTags } from 'react-icons/fa';
+import { FaTachometerAlt, FaUsers, FaSignOutAlt, FaBox, FaTags, FaImages } from 'react-icons/fa';
 
 const AdminLayout = () => {
     const { logout } = useContext(AuthContext) as any;
@@ -31,6 +31,9 @@ const AdminLayout = () => {
                     </Link>
                     <Link to="/admin/categories" className={`admin-nav-item ${isActive('/admin/categories') ? 'active' : ''}`}>
                         <FaTags className="admin-nav-icon" /> Danh mục
+                    </Link>
+                    <Link to="/admin/banners" className={`admin-nav-item ${isActive('/admin/banners') ? 'active' : ''}`}>
+                        <FaImages className="admin-nav-icon" /> Banners
                     </Link>
                     <Link to="/admin/users" className={`admin-nav-item ${isActive('/admin/users') ? 'active' : ''}`}>
                         <FaUsers className="admin-nav-icon" /> Người dùng

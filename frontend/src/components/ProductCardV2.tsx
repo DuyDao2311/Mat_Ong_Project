@@ -2,8 +2,19 @@ import { FaHeart } from 'react-icons/fa';
 import { BsDroplet, BsStars } from 'react-icons/bs';
 import { MdAddShoppingCart } from "react-icons/md";
 import { Link } from 'react-router-dom';
+import { useContext } from 'react';
+import { CartContext } from '../context/CartContext';
 
 function ProductCardV2({ product }: { product: any }) {
+  const cartContext = useContext(CartContext) as any;
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (cartContext?.addToCart) {
+      cartContext.addToCart(product, 1);
+    }
+  };
+
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('vi-VN').format(price) + ' đ';
   };
@@ -65,7 +76,7 @@ function ProductCardV2({ product }: { product: any }) {
 
           <div className="pcv2-footer">
             <div className="pcv2-price">{formatPrice(product.price)}</div>
-            <button className="pcv2-add-btn">
+            <button className="pcv2-add-btn" onClick={handleAddToCart}>
               Thêm <MdAddShoppingCart size={14} className="ml-1" />
             </button>
           </div>

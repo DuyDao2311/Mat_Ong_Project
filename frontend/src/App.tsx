@@ -11,8 +11,10 @@ import Dashboard from './pages/admin/Dashboard';
 import UserList from './pages/admin/UserList';
 import ProductList from './pages/admin/ProductList';
 import CategoryList from './pages/admin/CategoryList';
+import BannerList from './pages/admin/BannerList';
 import ProductListPage from './pages/ProductListPage';
 import ProductDetailPage from './pages/ProductDetailPage';
+import CartPage from './pages/CartPage';
 import ScrollToTop from './components/ScrollToTop';
 import './App.css';
 
@@ -26,6 +28,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/products" element={<ProductListPage />} />
         <Route path="/products/:id" element={<ProductDetailPage />} />
+        <Route path="/cart" element={<CartPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
 
@@ -36,6 +39,7 @@ function App() {
             <Route path="users" element={<UserList />} />
             <Route path="products" element={<ProductList />} />
             <Route path="categories" element={<CategoryList />} />
+            <Route path="banners" element={<BannerList />} />
           </Route>
         </Route>
       </Routes>

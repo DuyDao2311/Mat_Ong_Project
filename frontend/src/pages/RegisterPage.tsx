@@ -2,6 +2,11 @@ import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { toast } from 'react-toastify';
+import { MdOutlineMailOutline } from 'react-icons/md';
+import { FiUser, FiPhone, FiLock } from 'react-icons/fi';
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
+import { FcGoogle } from 'react-icons/fc';
+import { FaFacebook } from 'react-icons/fa';
 
 const RegisterPage = () => {
     const [name, setName] = useState('');
@@ -10,13 +15,15 @@ const RegisterPage = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-    const { register } = useContext(AuthContext);
+    const { register } = useContext(AuthContext)!;
     const navigate = useNavigate();
 
-    const submitHandler = async (e) => {
+    const submitHandler = async (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         if (password !== confirmPassword) {
             toast.error('Mật khẩu xác nhận không khớp');
             return;
@@ -36,78 +43,127 @@ const RegisterPage = () => {
     };
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-amber-50">
-            <div className="w-full max-w-lg p-8 space-y-6 bg-white rounded-xl shadow-lg border border-amber-200">
-                <h1 className="text-3xl font-bold text-center text-amber-700">Đăng Ký Tài Khoản</h1>
-                <form onSubmit={submitHandler} className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Họ và tên</label>
-                        <input
-                            type="text"
-                            required
-                            className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-lg focus:ring-amber-500 focus:border-amber-500"
-                            placeholder="Nhập họ tên"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                        />
+        <div className="login-page-wrapper" style={{ minHeight: '100vh', height: 'auto', padding: '40px 20px', overflowY: 'auto' }}>
+            <div className="login-card">
+                <h1 className="login-brand-title" style={{ marginBottom: '15px' }}>NGỌC TRANG</h1>
+                <p className="login-subtitle" style={{ marginBottom: '25px' }}>
+                    Khám phá tinh túy mật ong từ cao nguyên đá Đồng Văn
+                </p>
+
+                <form onSubmit={submitHandler}>
+                    <div className="register-field">
+                        <label className="register-label">Họ và Tên</label>
+                        <div className="login-form-group register-group">
+                            <FiUser className="login-input-icon" />
+                            <input
+                                type="text"
+                                required
+                                className="login-input register-input"
+                                placeholder="Nguyễn Văn A"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                            />
+                        </div>
                     </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Email</label>
-                        <input
-                            type="email"
-                            required
-                            className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-lg focus:ring-amber-500 focus:border-amber-500"
-                            placeholder="Nhập email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
+
+                    <div className="register-field">
+                        <label className="register-label">Email</label>
+                        <div className="login-form-group register-group">
+                            <MdOutlineMailOutline className="login-input-icon" />
+                            <input
+                                type="email"
+                                required
+                                className="login-input register-input"
+                                placeholder="email@example.com"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                        </div>
                     </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Số điện thoại</label>
-                        <input
-                            type="tel"
-                            required
-                            className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-lg focus:ring-amber-500 focus:border-amber-500"
-                            placeholder="Nhập số điện thoại"
-                            value={phone}
-                            onChange={(e) => setPhone(e.target.value)}
-                        />
+
+                    <div className="register-field">
+                        <label className="register-label">Số Điện Thoại</label>
+                        <div className="login-form-group register-group">
+                            <FiPhone className="login-input-icon" />
+                            <input
+                                type="tel"
+                                required
+                                className="login-input register-input"
+                                placeholder="0912 345 678"
+                                value={phone}
+                                onChange={(e) => setPhone(e.target.value)}
+                            />
+                        </div>
                     </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Mật khẩu</label>
-                        <input
-                            type="password"
-                            required
-                            className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-lg focus:ring-amber-500 focus:border-amber-500"
-                            placeholder="Nhập mật khẩu"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
+
+                    <div className="register-field">
+                        <label className="register-label">Mật Khẩu</label>
+                        <div className="login-form-group register-group">
+                            <FiLock className="login-input-icon" />
+                            <input
+                                type={showPassword ? 'text' : 'password'}
+                                required
+                                className="login-input register-input"
+                                placeholder="........"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                            <div
+                                className="login-input-eye"
+                                onClick={() => setShowPassword(!showPassword)}
+                            >
+                                {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Xác nhận mật khẩu</label>
-                        <input
-                            type="password"
-                            required
-                            className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-lg focus:ring-amber-500 focus:border-amber-500"
-                            placeholder="Xác nhận mật khẩu"
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                        />
+
+                    <div className="register-field">
+                        <label className="register-label">Xác Nhận Mật Khẩu</label>
+                        <div className="login-form-group register-group">
+                            <FiLock className="login-input-icon" />
+                            <input
+                                type={showConfirmPassword ? 'text' : 'password'}
+                                required
+                                className="login-input register-input"
+                                placeholder="........"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                            />
+                            <div
+                                className="login-input-eye"
+                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                            >
+                                {showConfirmPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+                            </div>
+                        </div>
                     </div>
+
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className={`w-full py-3 mt-4 text-white font-semibold rounded-lg shadow-md focus:outline-none transition-colors ${
-                            isLoading ? 'bg-amber-400 cursor-not-allowed' : 'bg-amber-600 hover:bg-amber-700'
-                        }`}
+                        className="login-submit-btn"
+                        style={{ marginTop: '10px' }}
                     >
-                        {isLoading ? 'Đang xử lý...' : 'Đăng Ký'}
+                        {isLoading ? 'Đang xử lý...' : 'Đăng ký tài khoản'}
                     </button>
                 </form>
-                <div className="text-center text-sm text-gray-600">
-                    Đã có tài khoản?{' '}
-                    <Link to="/login" className="text-amber-600 hover:underline font-semibold">
+
+                <div className="login-divider">
+                    Hoặc đăng ký bằng
+                </div>
+
+                <div className="login-social-group">
+                    <button className="login-social-btn" type="button" style={{ fontWeight: 600, color: '#555', fontSize: '0.9rem' }}>
+                        <FcGoogle style={{ marginRight: '8px', fontSize: '1.2rem' }} /> Google
+                    </button>
+                    <button className="login-social-btn" type="button" style={{ fontWeight: 600, color: '#555', fontSize: '0.9rem' }}>
+                        <FaFacebook style={{ color: '#1877F2', marginRight: '8px', fontSize: '1.2rem' }} /> Facebook
+                    </button>
+                </div>
+
+                <div className="login-register-text" style={{ marginTop: '10px' }}>
+                    Bạn đã có tài khoản?{' '}
+                    <Link to="/login" className="login-register-link" style={{ fontWeight: 500, color: '#666', textDecoration: 'none' }}>
                         Đăng nhập ngay
                     </Link>
                 </div>
