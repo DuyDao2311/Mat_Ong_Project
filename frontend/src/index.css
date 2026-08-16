@@ -73,6 +73,8 @@ button {
 
 .home-page {
   background-color: var(--cream);
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 /* ========================================
@@ -264,15 +266,20 @@ button {
 @media (max-width: 768px) {
   .hero-banner {
     aspect-ratio: auto;
-    min-height: 280px;
-    max-height: 400px;
+    min-height: auto;
+    max-height: none;
+  }
+  .hero-banner-img {
+    position: static;
+    height: auto;
+    object-fit: contain;
   }
 }
 
 @media (max-width: 480px) {
   .hero-banner {
-    min-height: 220px;
-    max-height: 320px;
+    min-height: auto;
+    max-height: none;
   }
 }
 
@@ -382,7 +389,7 @@ button {
 .promo-banner-2 {
   background: linear-gradient(135deg, #c0392b 0%, #e74c3c 40%, #ff6b6b 100%);
   color: white;
-  width: 470px;
+  width: 100%;
 }
 
 .promo-banner-3 {
@@ -951,6 +958,20 @@ button {
    RESPONSIVE - MOBILE
    ======================================== */
 @media (max-width: 768px) {
+  .category-bar,
+  .promo-banners,
+  .product-section,
+  .news-section,
+  .partner-section {
+    padding-top: 40px !important;
+    padding-bottom: 0 !important;
+  }
+
+  .brand-banner,
+  .footer {
+    margin-top: 40px !important;
+  }
+
   .header-nav {
     display: none;
   }
@@ -988,7 +1009,7 @@ button {
   }
 
   .hero-banner {
-    min-height: 400px;
+    min-height: auto;
   }
 
   .hero-brand-name {
@@ -1060,12 +1081,24 @@ button {
   }
 
   .promo-banners {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 12px;
+    height: auto;
   }
 
-  .promo-banners .promo-banner:last-child {
-    grid-column: auto;
+  .promo-banner-1 {
+    grid-column: 1 / 2 !important;
+    grid-row: 1 !important;
+  }
+
+  .promo-banner-3 {
+    grid-column: 2 / 3 !important;
+    grid-row: 1 !important;
+  }
+
+  .promo-banner-2 {
+    grid-column: 1 / span 2 !important;
+    grid-row: 2 !important;
   }
 
   .promo-banner {
@@ -1079,6 +1112,11 @@ button {
   .brand-banner-name {
     font-size: 2.5rem;
     letter-spacing: 5px;
+  }
+
+  .section-title-wrapper {
+    padding-top: 0;
+    margin-bottom: 20px;
   }
 
   .brand-banner-tagline {
@@ -1129,7 +1167,7 @@ button {
   }
 
   .hero-banner {
-    min-height: 340px;
+    min-height: auto;
   }
 
   .hero-brand-name {

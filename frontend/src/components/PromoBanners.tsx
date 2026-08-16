@@ -63,7 +63,8 @@ function PromoBanners() {
               className={`promo-banner promo-banner-${pos}`}
               style={{
                 background: `url(${resolveImageUrl(dynamicBanner.image)})`,
-                backgroundSize: '100% 100%',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
               }}
             >
