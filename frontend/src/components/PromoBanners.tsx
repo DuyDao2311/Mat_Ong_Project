@@ -27,34 +27,34 @@ function PromoBanners() {
     return banners.find(b => b.position === pos);
   };
 
-  const defaultBanners = [
-    {
-      pos: 1,
-      className: 'promo-banner-1',
-      title: 'Mật ong HOA BẠC HÀ',
-      subtitle: 'Đặc sản vùng cao Đồng Văn'
-    },
-    {
-      pos: 2,
-      className: 'promo-banner-2',
-      highlight: 'SỐ 1',
-      subtitleTop: 'Thức uống',
-      subtitleBottom: 'cho mùa hè'
-    },
-    {
-      pos: 3,
-      className: 'promo-banner-3',
-      title: 'STRESS',
-      subtitleTop: '“Xóa tan”',
-      subtitleBottom: 'cùng mật ong thiên nhiên'
-    }
-  ];
+  // const defaultBanners = [
+  //   {
+  //     pos: 1,
+  //     className: 'promo-banner-1',
+  //     title: 'Mật ong HOA BẠC HÀ',
+  //     subtitle: 'Đặc sản vùng cao Đồng Văn'
+  //   },
+  //   {
+  //     pos: 2,
+  //     className: 'promo-banner-2',
+  //     highlight: 'SỐ 1',
+  //     subtitleTop: 'Thức uống',
+  //     subtitleBottom: 'cho mùa hè'
+  //   },
+  //   {
+  //     pos: 3,
+  //     className: 'promo-banner-3',
+  //     title: 'STRESS',
+  //     subtitleTop: '“Xóa tan”',
+  //     subtitleBottom: 'cùng mật ong thiên nhiên'
+  //   }
+  // ];
 
   return (
     <section className="promo-banners" id="promo-banners">
       {[1, 2, 3].map((pos) => {
         const dynamicBanner = getBannerForPosition(pos);
-        const fallback = defaultBanners.find(d => d.pos === pos);
+        // const fallback = defaultBanners.find(d => d.pos === pos);
 
         if (dynamicBanner) {
           return (
@@ -71,20 +71,20 @@ function PromoBanners() {
               {/* Dynamic banner only shows image, no text */}
             </div>
           );
-        } else if (fallback) {
-          return (
-            <div key={`fallback-${pos}`} className={`promo-banner ${fallback.className}`}>
-              <div className="promo-banner-decoration"></div>
-              <div className="promo-banner-content">
-                {fallback.subtitleTop && <div className="promo-banner-subtitle">{fallback.subtitleTop}</div>}
-                {fallback.title && <div className="promo-banner-title">{fallback.title}</div>}
-                {fallback.highlight && <span className="promo-banner-highlight">{fallback.highlight}</span>}
-                {(fallback.subtitleBottom || fallback.subtitle) && (
-                  <div className="promo-banner-subtitle">{fallback.subtitleBottom || fallback.subtitle}</div>
-                )}
-              </div>
-            </div>
-          );
+          // } else if (fallback) {
+          //   return (
+          //     <div key={`fallback-${pos}`} className={`promo-banner ${fallback.className}`}>
+          //       <div className="promo-banner-decoration"></div>
+          //       <div className="promo-banner-content">
+          //         {fallback.subtitleTop && <div className="promo-banner-subtitle">{fallback.subtitleTop}</div>}
+          //         {fallback.title && <div className="promo-banner-title">{fallback.title}</div>}
+          //         {fallback.highlight && <span className="promo-banner-highlight">{fallback.highlight}</span>}
+          //         {(fallback.subtitleBottom || fallback.subtitle) && (
+          //           <div className="promo-banner-subtitle">{fallback.subtitleBottom || fallback.subtitle}</div>
+          //         )}
+          //       </div>
+          //     </div>
+          //   );
         }
         return null;
       })}
