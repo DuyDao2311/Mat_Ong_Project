@@ -1,11 +1,8 @@
+import 'dotenv/config';
 import path from 'path';
 import express from 'express';
-import dotenv from 'dotenv';
 import cors from 'cors';
 import connectDB from './config/db.js';
-
-// Load env vars
-dotenv.config();
 
 // Connect to database
 connectDB();
@@ -23,7 +20,8 @@ import uploadRoutes from './routes/uploadRoutes.js';
 import categoryRoutes from './routes/categoryRoutes.js';
 import cartRoutes from './routes/cartRoutes.js';
 import bannerRoutes from './routes/bannerRoutes.js';
-
+import orderRoutes from './routes/orderRoutes.js';
+import searchRoutes from './routes/searchRoutes.js';
 // Routes
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
@@ -31,7 +29,8 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/banners', bannerRoutes);
-
+app.use('/api/orders', orderRoutes);
+app.use('/api/search', searchRoutes);
 const __dirname = path.resolve();
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 

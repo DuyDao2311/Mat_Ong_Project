@@ -66,9 +66,9 @@ function Footer() {
           </div>
         </div>
       </div>
-      <div className="footer-bottom-new">
+      {/* <div className="footer-bottom-new">
         <p>Copyrights © 1964 by CÔNG TY CỔ PHẦN ONG TRUNG ƯƠNG</p>
-      </div>
+      </div> */}
     </footer>
   );
 }

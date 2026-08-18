@@ -8,19 +8,60 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { FcGoogle } from 'react-icons/fc';
 import { FaFacebook } from 'react-icons/fa';
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+interface LoginErrors {
+    email: string;
+    password: string;
+}
+
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
+    const [errors, setErrors] = useState<LoginErrors>({
+        email: '',
+        password: '',
+    });
 
     const { login } = useContext(AuthContext) as any;
     const navigate = useNavigate();
 
+    const validateForm = (): boolean => {
+        const newErrors: LoginErrors = {
+            email: '',
+            password: '',
+        };
+        let isValid = true;
+
+        const trimmedEmail = email.trim();
+        if (!trimmedEmail) {
+            newErrors.email = 'Vui lòng nhập Email';
+            isValid = false;
+        } else if (!EMAIL_REGEX.test(trimmedEmail)) {
+            newErrors.email = 'Email không đúng định dạng';
+            isValid = false;
+        }
+
+        if (!password) {
+            newErrors.password = 'Vui lòng nhập mật khẩu';
+            isValid = false;
+        }
+
+        setErrors(newErrors);
+        return isValid;
+    };
+
     const submitHandler = async (e: any) => {
         e.preventDefault();
+
+        if (!validateForm()) {
+            return;
+        }
+
         setIsLoading(true);
-        const result = await login(email, password);
+        const result = await login(email.trim().toLowerCase(), password);
         setIsLoading(false);
 
         if (result.success) {
@@ -35,6 +76,17 @@ const LoginPage = () => {
         }
     };
 
+    const handleFieldChange = (
+        field: keyof LoginErrors,
+        value: string,
+        setter: React.Dispatch<React.SetStateAction<string>>
+    ) => {
+        setter(value);
+        if (errors[field]) {
+            setErrors((prev) => ({ ...prev, [field]: '' }));
+        }
+    };
+
     return (
         <div className="login-page-wrapper">
             <div className="login-card">
@@ -44,35 +96,39 @@ const LoginPage = () => {
                     Tiếp tục hành trình khám phá tinh túy mật ong Ngọc Trang
                 </p>
 
-                <form onSubmit={submitHandler}>
-                    <div className="login-form-group">
-                        <MdOutlineMailOutline className="login-input-icon" />
-                        <input
-                            type="email"
-                            required
-                            className="login-input"
-                            placeholder="Email của bạn"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
+                <form onSubmit={submitHandler} noValidate>
+                    <div className="login-field-wrapper">
+                        <div className="login-form-group">
+                            <MdOutlineMailOutline className="login-input-icon" />
+                            <input
+                                type="email"
+                                className={`login-input${errors.email ? ' input-error' : ''}`}
+                                placeholder="Email của bạn"
+                                value={email}
+                                onChange={(e) => handleFieldChange('email', e.target.value, setEmail)}
+                            />
+                        </div>
+                        {errors.email && <p className="field-error-text">{errors.email}</p>}
                     </div>
 
-                    <div className="login-form-group">
-                        <FiLock className="login-input-icon" />
-                        <input
-                            type={showPassword ? 'text' : 'password'}
-                            required
-                            className="login-input"
-                            placeholder="Mật khẩu"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                        <div
-                            className="login-input-eye"
-                            onClick={() => setShowPassword(!showPassword)}
-                        >
-                            {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+                    <div className="login-field-wrapper">
+                        <div className="login-form-group">
+                            <FiLock className="login-input-icon" />
+                            <input
+                                type={showPassword ? 'text' : 'password'}
+                                className={`login-input${errors.password ? ' input-error' : ''}`}
+                                placeholder="Mật khẩu"
+                                value={password}
+                                onChange={(e) => handleFieldChange('password', e.target.value, setPassword)}
+                            />
+                            <div
+                                className="login-input-eye"
+                                onClick={() => setShowPassword(!showPassword)}
+                            >
+                                {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+                            </div>
                         </div>
+                        {errors.password && <p className="field-error-text">{errors.password}</p>}
                     </div>
 
                     <div className="login-options">
@@ -90,7 +146,7 @@ const LoginPage = () => {
                         disabled={isLoading}
                         className="login-submit-btn"
                     >
-                        {isLoading ? 'Đang xử lý...' : 'Đăng nhập'}
+                        {isLoading ? 'Đang đăng nhập...' : 'Đăng nhập'}
                     </button>
                 </form>
 

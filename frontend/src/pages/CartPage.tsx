@@ -110,9 +110,9 @@ function CartPage() {
                 </div>
               </div>
 
-              <button className="summary-checkout-btn">
+              <Link to="/checkout" className="summary-checkout-btn" style={{ display: 'block', textAlign: 'center', textDecoration: 'none' }}>
                 Tiến hành thanh toán →
-              </button>
+              </Link>
 
               <div className="summary-secure">
                 <FaLock /> <span>Thanh toán an toàn 100%</span>

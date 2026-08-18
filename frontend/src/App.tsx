@@ -15,6 +15,7 @@ import BannerList from './pages/admin/BannerList';
 import ProductListPage from './pages/ProductListPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import CartPage from './pages/CartPage';
+import CheckoutPage from './pages/CheckoutPage';
 import ScrollToTop from './components/ScrollToTop';
 import './App.css';
 
@@ -29,6 +30,8 @@ function App() {
         <Route path="/products" element={<ProductListPage />} />
         <Route path="/products/:id" element={<ProductDetailPage />} />
         <Route path="/cart" element={<CartPage />} />
+        <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/order-success" element={<div style={{padding:'100px', textAlign:'center'}}><h2>Đặt hàng thành công!</h2><p>Cảm ơn bạn đã mua sắm.</p><a href="/">Về trang chủ</a></div>} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
 

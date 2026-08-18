@@ -5,7 +5,7 @@ interface AuthContextType {
     user: any;
     loading: boolean;
     login: (email: string, password: string) => Promise<any>;
-    register: (name: string, email: string, phone: string, password: string, role: string) => Promise<any>;
+    register: (name: string, email: string, phone: string, password: string, confirmPassword: string, role: string) => Promise<any>;
     logout: () => void;
 }
 
@@ -43,10 +43,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
-    const register = async (name: string, email: string, phone: string, password: string, role: string) => {
+    const register = async (name: string, email: string, phone: string, password: string, confirmPassword: string, role: string) => {
         try {
             const { data } = await api.post('/users/register', {
-                name, email, phone, password, role
+                name, email, phone, password, confirmPassword, role
             });
             // Tự động đăng nhập
             setUser(data);

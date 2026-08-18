@@ -17,15 +17,18 @@ function ProductListPage() {
   const location = useLocation();
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [priceRange, setPriceRange] = useState({ min: '', max: '' });
+  const [searchKeyword, setSearchKeyword] = useState('');
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const categoryQuery = searchParams.get('category');
+    const searchQuery = searchParams.get('search');
     if (categoryQuery) {
       setSelectedCategories([categoryQuery]);
     } else {
       setSelectedCategories([]);
     }
+    setSearchKeyword(searchQuery || '');
     setCurrentPage(1);
   }, [location.search]);
   // const [selectedFlavors, setSelectedFlavors] = useState<string[]>([]);
@@ -89,6 +92,17 @@ function ProductListPage() {
 
   // Lọc sản phẩm (giả lập trên client vì backend chưa có API lọc chi tiết)
   const filteredProducts = Array.isArray(products) ? products.filter((product) => {
+    // Lọc theo từ khóa tìm kiếm
+    if (searchKeyword.trim()) {
+      const keyword = searchKeyword.trim().toLowerCase();
+      const name = (product.name || '').toLowerCase();
+      const description = (product.description || '').toLowerCase();
+      const category = (product.category || '').toLowerCase();
+      if (!name.includes(keyword) && !description.includes(keyword) && !category.includes(keyword)) {
+        return false;
+      }
+    }
+
     // Lọc theo danh mục
     if (selectedCategories.length > 0) {
       if (!product.category || !selectedCategories.includes(product.category)) {
@@ -201,8 +215,10 @@ function ProductListPage() {
         <main className="plp-main">
           <div className="plp-main-header">
             <div className="plp-count">
-              <span className="plp-count-title">Sản phẩm</span>
-              {/* <span className="plp-count-number">({filteredProducts.length})</span> */}
+              <span className="plp-count-title">
+                {searchKeyword ? `Kết quả tìm kiếm: "${searchKeyword}"` : 'Sản phẩm'}
+              </span>
+              <span className="plp-count-number">({filteredProducts.length})</span>
             </div>
             <div className="plp-sort">
               Sắp xếp:

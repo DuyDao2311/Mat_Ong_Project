@@ -79,7 +79,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
                 const { data } = await api.post('/cart', { productId: product._id, quantity });
                 setCartItems(data.items);
                 setTotalPrice(data.totalPrice);
-                toast.success('Đã thêm vào giỏ hàng!');
+                // toast.success('Đã thêm vào giỏ hàng!');
             } catch (error) {
                 console.error("Add to cart error", error);
                 toast.error('Lỗi khi thêm vào giỏ hàng');
@@ -96,7 +96,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
             setCartItems(updatedCart);
             calculateLocalTotal(updatedCart);
             localStorage.setItem('guestCart', JSON.stringify(updatedCart));
-            toast.success('Đã thêm vào giỏ hàng!');
+            // toast.success('Đã thêm vào giỏ hàng!');
         }
     };
 
