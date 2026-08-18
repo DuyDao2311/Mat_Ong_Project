@@ -1,5 +1,7 @@
 import { FaHome, FaPhoneAlt } from "react-icons/fa";
 import { IoMdMail } from "react-icons/io";
+import { Link } from 'react-router-dom';
+import logoImg from '../../image/logo/613326243_4319054925046133_8782869459334492277_n.jpg';
 
 function Footer() {
   return (
@@ -7,13 +9,13 @@ function Footer() {
       <div className="footer-top-line"></div>
       <div className="footer-inner-new container">
         <div className="footer-col brand-col">
-          <div className="footer-logo">
-            <span className="logo-icon">🐝</span>
+          <Link to="/" className="footer-logo" style={{ textDecoration: 'none' }} onClick={() => window.scrollTo(0, 0)}>
+            <span className="logo-icon"><img src={logoImg} alt="Mật Ong Núi Đá Logo" /></span>
             <div className="logo-text-wrap">
-              <span className="logo-text">MẬT ONG</span>
-              <span className="logo-subtitle">Ong Trung Ương - Since 1964</span>
+              <span className="logo-text">MẬT ONG NÚI ĐÁ</span>
+              <span className="logo-subtitle">Chất Lượng Vàng • Từ Thiên Nhiên</span>
             </div>
-          </div>
+          </Link>
           <ul className="contact-list">
             <li><FaHome size={20} />&nbsp;Địa chỉ: Thôn Đồng Thanh, Xã Đồng Văn, Tỉnh Tuyên Quang</li>
             <li><FaPhoneAlt size={20} />&nbsp;Tổng đài hỗ trợ: 091.234.5678</li>

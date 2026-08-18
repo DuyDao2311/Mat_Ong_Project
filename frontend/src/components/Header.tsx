@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback, useContext } from 'react';
 import { FaSearch, FaShoppingCart, FaUser, FaTimes } from "react-icons/fa";
+import { TfiSearch } from "react-icons/tfi";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { CartContext } from '../context/CartContext';
@@ -142,39 +143,6 @@ function Header() {
         </Link>
 
         <nav className={`header-nav ${mobileOpen ? 'mobile-open' : ''}`}>
-          <Link to="/" className={location.pathname === '/' ? "active" : ""}>HOME</Link>
-          <a href="#">GIỚI THIỆU</a>
-          <Link to="/products" className={location.pathname === '/products' ? "active" : ""}>
-            SẢN PHẨM
-          </Link>
-          <a href="#">CHÍNH SÁCH</a>
-          <a href="#">LIÊN HỆ</a>
-
-          {/* Mobile Auth Links */}
-          {/* Mobile Auth Links */}
-          {user ? (
-            <>
-              <span className="md:hidden flex items-center justify-center gap-2" style={{ padding: '12px 16px', fontSize: '0.82rem', fontWeight: 600, letterSpacing: '1px', textTransform: 'uppercase', color: 'var(--amber-700)' }}>
-                <FaUser /> {user.name}
-              </span>
-              <button
-                onClick={() => {
-                  logout();
-                  setMobileOpen(false);
-                }}
-                className="md:hidden"
-                style={{ padding: '12px 16px', fontSize: '0.82rem', fontWeight: 600, letterSpacing: '1px', textTransform: 'uppercase', color: 'var(--red-600)' }}
-              >
-                Đăng xuất
-              </button>
-            </>
-          ) : (
-            <>
-              <Link to="/login" className="md:hidden" onClick={() => setMobileOpen(false)}>Đăng nhập</Link>
-              <Link to="/register" className="md:hidden" onClick={() => setMobileOpen(false)}>Đăng ký</Link>
-            </>
-          )}
-
           {/* Mobile Search Input */}
           <div className="mobile-menu-search md:hidden">
             <button className="mobile-menu-search-icon" onClick={() => {
@@ -184,7 +152,7 @@ function Header() {
                 setSearchQuery('');
               }
             }}>
-              <FaSearch size={18} />
+              <TfiSearch size={18} />
             </button>
             <input
               type="text"
@@ -218,8 +186,15 @@ function Header() {
                 <div className="mobile-search-results-list">
                   {searchResults.products.length > 0 && (
                     <div className="search-section">
-                      <div className="search-section-header" style={{ padding: '8px 10px' }}>
+                      <div className="search-section-header" style={{ padding: '5px 5px' }}>
                         <span className="search-section-title">Sản phẩm</span>
+                        <Link
+                          to={`/products?search=${encodeURIComponent(searchQuery)}`}
+                          className="search-section-more"
+                          onClick={() => setMobileOpen(false)}
+                        >
+                          Xem thêm({searchResults.totalProducts})
+                        </Link>
                       </div>
                       <div className="search-section-list">
                         {searchResults.products.slice(0, 3).map((product) => (
@@ -248,6 +223,9 @@ function Header() {
                     <div className="search-section">
                       <div className="search-section-header" style={{ padding: '8px 10px' }}>
                         <span className="search-section-title">Bài viết</span>
+                        <span className="search-section-more">
+                          Xem thêm({searchResults.totalBanners})
+                        </span>
                       </div>
                       <div className="search-section-list">
                         {searchResults.banners.slice(0, 2).map((banner) => (
@@ -273,6 +251,40 @@ function Header() {
               )}
             </div>
           )}
+
+          <Link to="/" className={location.pathname === '/' ? "active" : ""}>HOME</Link>
+          <a href="#">GIỚI THIỆU</a>
+          <Link to="/products" className={location.pathname === '/products' ? "active" : ""}>
+            SẢN PHẨM
+          </Link>
+          <a href="#">CHÍNH SÁCH</a>
+          <a href="#">LIÊN HỆ</a>
+
+          {/* Mobile Auth Links */}
+          {/* Mobile Auth Links */}
+          {user ? (
+            <>
+              <span className="md:hidden flex items-center justify-center gap-2" style={{ padding: '12px 16px', fontSize: '0.82rem', fontWeight: 600, letterSpacing: '1px', textTransform: 'uppercase', color: 'var(--amber-700)' }}>
+                <FaUser /> {user.name}
+              </span>
+              <button
+                onClick={() => {
+                  logout();
+                  setMobileOpen(false);
+                }}
+                className="md:hidden"
+                style={{ padding: '12px 16px', fontSize: '0.82rem', fontWeight: 600, letterSpacing: '1px', textTransform: 'uppercase', color: 'var(--red-600)' }}
+              >
+                Đăng xuất
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" className="md:hidden" onClick={() => setMobileOpen(false)}>Đăng nhập</Link>
+              <Link to="/register" className="md:hidden" onClick={() => setMobileOpen(false)}>Đăng ký</Link>
+            </>
+          )}
+
         </nav>
 
         <div className="header-actions flex items-center">
