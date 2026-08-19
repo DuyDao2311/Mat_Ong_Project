@@ -1,4 +1,4 @@
-import bannerImg from '../../image/flowers/Gemini_Generated_Image_1dp3vh1dp3vh1dp3.png';
+import bannerImg from '../../image/logo/BannerPro.png';
 
 function HeroBanner() {
   return (

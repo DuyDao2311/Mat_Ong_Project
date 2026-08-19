@@ -1,0 +1,29 @@
+config:
+  target: "http://localhost:5000"
+  phases:
+    - duration: 10
+      arrivalRate: 5
+      name: "Giai doan 1: Warm up (5 users/giay trong 10s)"
+    - duration: 30
+      arrivalRate: 5
+      rampTo: 50
+      name: "Giai doan 2: Tang tai (5 den 50 users/giay trong 30s)"
+    - duration: 10
+      arrivalRate: 100
+      name: "Giai doan 3: Dinh diem (100 users/giay trong 10s)"
+scenarios:
+  - name: "Nguoi dung vao xem san pham va danh muc"
+    flow:
+      # Buoc 1: Vao trang chu (kiem tra API hoat dong)
+      - get:
+          url: "/"
+      # Nghi 1 giay (giong nhu dang doc noi dung)
+      - think: 1
+      # Buoc 2: Xem danh sach san pham
+      - get:
+          url: "/api/products"
+      # Nghi 2 giay
+      - think: 2
+      # Buoc 3: Xem danh muc san pham
+      - get:
+          url: "/api/categories"

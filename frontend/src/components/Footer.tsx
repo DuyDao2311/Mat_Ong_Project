@@ -12,7 +12,7 @@ function Footer() {
           <Link to="/" className="footer-logo" style={{ textDecoration: 'none' }} onClick={() => window.scrollTo(0, 0)}>
             <span className="logo-icon"><img src={logoImg} alt="Mật Ong Núi Đá Logo" /></span>
             <div className="logo-text-wrap">
-              <span className="logo-text">MẬT ONG NÚI ĐÁ</span>
+              <span className="logo-text">MẬT ONG NÚI ĐÁ ĐỒNG VĂN</span>
               <span className="logo-subtitle">Chất Lượng Vàng • Từ Thiên Nhiên</span>
             </div>
           </Link>
