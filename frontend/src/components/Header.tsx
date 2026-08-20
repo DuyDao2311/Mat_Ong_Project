@@ -258,7 +258,7 @@ function Header() {
             SẢN PHẨM
           </Link>
           <a href="#">CHÍNH SÁCH</a>
-          <a href="#">LIÊN HỆ</a>
+          <Link to="/contact" className={location.pathname === '/contact' ? "active" : ""}>LIÊN HỆ</Link>
 
           {/* Mobile Auth Links */}
           {/* Mobile Auth Links */}

@@ -3,6 +3,7 @@ import api from '../../services/api';
 import { AuthContext } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
 import { FaTrash, FaEdit, FaPlus } from 'react-icons/fa';
+import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import axios from 'axios';
 
 const ProductList = () => {
@@ -11,6 +12,10 @@ const ProductList = () => {
     const [categories, setCategories] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
+
+    // Pagination state
+    const [currentPage, setCurrentPage] = useState(1);
+    const productsPerPage = 10;
 
     // Form state
     const [editId, setEditId] = useState<string | null>(null);
@@ -116,6 +121,16 @@ const ProductList = () => {
         }
     };
 
+    // Lấy danh sách sản phẩm cho trang hiện tại
+    const indexOfLastProduct = currentPage * productsPerPage;
+    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+    const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
+    const totalPages = Math.ceil(products.length / productsPerPage);
+
+    const handlePageChange = (pageNumber: number) => {
+        setCurrentPage(pageNumber);
+    };
+
     if (loading) return <div>Đang tải dữ liệu...</div>;
 
     return (
@@ -131,6 +146,7 @@ const ProductList = () => {
                 <table className="admin-table">
                     <thead>
                         <tr>
+                            <th>STT</th>
                             <th>Hình ảnh</th>
                             <th>Tên</th>
                             <th>Dung tích</th>
@@ -141,8 +157,9 @@ const ProductList = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {products.map((p: any) => (
+                        {currentProducts.map((p: any, index: number) => (
                             <tr key={p._id}>
+                                <td>{indexOfFirstProduct + index + 1}</td>
                                 <td>
                                     {p.images?.length > 0 && (
                                         <img src={p.images[0].startsWith('http') ? p.images[0] : `http://localhost:5000${p.images[0]}`} alt={p.name} className="admin-product-img" />
@@ -164,6 +181,31 @@ const ProductList = () => {
                     </tbody>
                 </table>
             </div>
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+                <div className="plp-pagination" style={{ margin: '20px auto 30px' }}>
+                    <button
+                        className="plp-page-btn nav-btn"
+                        onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+                        disabled={currentPage === 1}
+                    ><FaAngleLeft /></button>
+
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                        <button
+                            key={page}
+                            className={`plp-page-btn ${currentPage === page ? 'active' : ''}`}
+                            onClick={() => handlePageChange(page)}
+                        >{page}</button>
+                    ))}
+
+                    <button
+                        className="plp-page-btn nav-btn"
+                        onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
+                        disabled={currentPage === totalPages}
+                    ><FaAngleRight /></button>
+                </div>
+            )}
 
             {/* Edit Modal */}
             {showModal && (

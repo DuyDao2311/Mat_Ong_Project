@@ -9,8 +9,8 @@ interface Category {
 }
 
 const iconMap: Record<string, React.ReactNode> = {
-  'MẬT ONG BẠC HÀ': <img src="/mat-ong-bac-ha.png" alt="Mật ong bạc hà" className="category-image-icon" />,
-  'MẬT ONG NÚI ĐÁ': <img src="/mat-ong-nui-da.png" alt="Mật ong núi đá" className="category-image-icon" />,
+  'MẬT ONG NGÂM': <img src="/mat-ong-bac-ha.png" alt="Mật ong ngâm" className="category-image-icon" />,
+  'MẬT ONG NGUYÊN CHẤT': <img src="/mat-ong-nui-da.png" alt="Mật ong nguyên chất" className="category-image-icon" />,
 };
 
 function CategoryBar() {
@@ -38,9 +38,9 @@ function CategoryBar() {
     <section className="category-bar" id="category-bar">
       <div className="category-list">
         {categories.map((cat, index) => (
-          <div 
-            key={cat._id} 
-            className="category-item" 
+          <div
+            key={cat._id}
+            className="category-item"
             id={`category-${index}`}
             onClick={() => handleCategoryClick(cat.name)}
             style={{ cursor: 'pointer' }}

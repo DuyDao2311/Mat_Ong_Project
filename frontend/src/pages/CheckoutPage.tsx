@@ -319,7 +319,7 @@ function CheckoutPage() {
                 </div>
                 <div className="checkout-total-row">
                   <span>Phí ship</span>
-                  <span>—</span>
+                  <span style={{ color: 'black', fontWeight: 'bold' }}>Free</span>
                 </div>
               </div>
 
