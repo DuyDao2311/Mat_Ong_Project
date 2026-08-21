@@ -2,6 +2,7 @@ import { FaHome, FaPhoneAlt } from "react-icons/fa";
 import { IoMdMail } from "react-icons/io";
 import { Link } from 'react-router-dom';
 import logoImg from '../../image/logo/613326243_4319054925046133_8782869459334492277_n.jpg';
+import logoCongThuong from '../../image/logo/Logo_Công_thương-removebg-preview.png';
 
 function Footer() {
   return (
@@ -21,6 +22,9 @@ function Footer() {
             <li><FaPhoneAlt size={20} />&nbsp;Tổng đài hỗ trợ: 091.234.5678</li>
             <li><IoMdMail size={20} />&nbsp;Email: info@matongtunhien.com</li>
           </ul>
+          <div style={{ marginTop: '45px' }}>
+            <img src={logoCongThuong} alt="Đã thông báo Bộ Công Thương" style={{ maxWidth: '280px' }} />
+          </div>
           {/* <div className="footer-badges">
             <div className="badge-placeholder blue">
               <span>✔</span> ĐÃ THÔNG BÁO BỘ CÔNG THƯƠNG
