@@ -12,11 +12,14 @@ import UserList from './pages/admin/UserList';
 import ProductList from './pages/admin/ProductList';
 import CategoryList from './pages/admin/CategoryList';
 import BannerList from './pages/admin/BannerList';
+import OrderList from './pages/admin/OrderList';
+import OrderDetail from './pages/admin/OrderDetail';
 import ProductListPage from './pages/ProductListPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import ContactPage from './pages/ContactPage';
+import OrderSuccessPage from './pages/OrderSuccessPage';
 import ScrollToTop from './components/ScrollToTop';
 import './App.css';
 
@@ -24,7 +27,7 @@ function App() {
   return (
     <>
       <ScrollToTop />
-      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
+      <ToastContainer position="top-right" autoClose={500} hideProgressBar={false} />
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<HomePage />} />
@@ -33,7 +36,7 @@ function App() {
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
         <Route path="/contact" element={<ContactPage />} />
-        <Route path="/order-success" element={<div style={{padding:'100px', textAlign:'center'}}><h2>Đặt hàng thành công!</h2><p>Cảm ơn bạn đã mua sắm.</p><a href="/">Về trang chủ</a></div>} />
+        <Route path="/order-success" element={<OrderSuccessPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
 
@@ -45,6 +48,8 @@ function App() {
             <Route path="products" element={<ProductList />} />
             <Route path="categories" element={<CategoryList />} />
             <Route path="banners" element={<BannerList />} />
+            <Route path="orders" element={<OrderList />} />
+            <Route path="orders/:id" element={<OrderDetail />} />
           </Route>
         </Route>
       </Routes>

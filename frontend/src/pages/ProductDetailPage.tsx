@@ -197,6 +197,10 @@ function ProductDetailPage() {
                 {renderStars(product.rating || 4.5)}
               </div>
               <span className="pdp-review-count">({product.numReviews || 158} đánh giá)</span>
+              <span style={{ margin: '0 8px', color: '#ccc' }}>|</span>
+              <span className="pdp-sold-count" style={{ color: '#666', fontSize: '14px' }}>
+                Đã bán: {product.sold || 0}
+              </span>
             </div>
 
             <div className="pdp-price">{formatPrice(product.price)}</div>
@@ -223,7 +227,12 @@ function ProductDetailPage() {
 
             {/* Quantity and Add to Cart Row */}
             <div className="pdp-option-group">
-              <label className="pdp-option-label">SỐ LƯỢNG</label>
+              <label className="pdp-option-label">
+                SỐ LƯỢNG
+                <span style={{ textTransform: 'none', color: '#666', fontSize: '14px', marginLeft: '10px', fontWeight: 'normal' }}>
+                  (Còn: {product.countInStock || 0})
+                </span>
+              </label>
               <div className="pdp-action-row">
                 <div className="pdp-quantity-selector">
                   <button className="pdp-qty-btn" onClick={() => handleQuantityChange(-1)}>−</button>

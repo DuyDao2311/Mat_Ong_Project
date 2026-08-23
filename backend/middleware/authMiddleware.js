@@ -36,4 +36,26 @@ const admin = (req, res, next) => {
     }
 };
 
-export { protect, admin };
+const optionalProtect = async (req, res, next) => {
+    let token;
+
+    if (
+        req.headers.authorization &&
+        req.headers.authorization.startsWith('Bearer')
+    ) {
+        try {
+            token = req.headers.authorization.split(' ')[1];
+
+            // Decode token id
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+            req.user = await User.findById(decoded.id).select('-password');
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    next();
+};
+
+export { protect, admin, optionalProtect };

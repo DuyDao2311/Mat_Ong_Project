@@ -29,8 +29,8 @@ const orderSchema = new mongoose.Schema({
     email: { type: String },
     phone: { type: String, required: true },
     address: { type: String, required: true },
-    city: { type: String, required: true }, 
-    district: { type: String, required: true }, 
+    city: { type: String, required: true },
+    district: { type: String, required: true },
   },
   paymentMethod: {
     type: String,
@@ -52,6 +52,11 @@ const orderSchema = new mongoose.Schema({
     required: true,
     default: 0.0
   },
+  amountReceived: {
+    type: Number,
+    required: true,
+    default: 0.0
+  },
   isPaid: {
     type: Boolean,
     required: true,
@@ -59,6 +64,16 @@ const orderSchema = new mongoose.Schema({
   },
   paidAt: {
     type: Date
+  },
+  paymentStatus: {
+    type: String,
+    enum: ['PENDING', 'PAID', 'PARTIALLY_PAID', 'OVERPAID', 'FAILED', 'EXPIRED'],
+    default: 'PENDING'
+  },
+  orderStatus: {
+    type: String,
+    enum: ['PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED'],
+    default: 'PENDING'
   },
   isDelivered: {
     type: Boolean,

@@ -1,24 +1,43 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { CartContext } from '../context/CartContext';
 import { AuthContext } from '../context/AuthContext';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import api from '../services/api';
 import { toast } from 'react-toastify';
-import { FaChevronRight } from 'react-icons/fa';
+import { FaChevronRight, FaMobileAlt, FaCopy, FaHourglassHalf } from 'react-icons/fa';
 
 function CheckoutPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const paymentCodeParam = searchParams.get('paymentCode');
+
   const cartContext = useContext(CartContext) as any;
   const authContext = useContext(AuthContext) as any;
   const { cartItems, totalPrice, clearCart } = cartContext;
   const { user } = authContext;
 
+  const handleCopy = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast.success('Đã copy!');
+  };
+
   // Validation regex (same as RegisterPage)
   const NAME_REGEX = /^[\p{L}]+(?:\s+[\p{L}]+)*$/u;
   const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const PHONE_REGEX = /^0\d{9}$/;
+
+  const [paymentMethod, setPaymentMethod] = useState('SePay');
+  const [paymentInfo, setPaymentInfo] = useState<any>(null);
+  const [paymentStatus, setPaymentStatus] = useState('PENDING');
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const [fieldErrors, setFieldErrors] = useState({
+    fullName: '',
+    email: '',
+    phone: ''
+  });
 
   const [formData, setFormData] = useState({
     fullName: user?.name || '',
@@ -29,20 +48,69 @@ function CheckoutPage() {
     district: '',
   });
 
-  const [fieldErrors, setFieldErrors] = useState({
-    fullName: '',
-    email: '',
-    phone: '',
-  });
+  useEffect(() => {
+    // If we're logged in but don't have user info in form, initialize it
+    if (user && !formData.fullName) {
+      setFormData(prev => ({
+        ...prev,
+        fullName: user.name,
+        email: user.email,
+        phone: user.phone || ''
+      }));
+    }
+  }, [user]);
+
+  // Polling payment status
+  useEffect(() => {
+    let intervalId: any;
+
+    const checkPaymentStatus = async (code: string) => {
+      try {
+        const res = await api.get(`/payments/${code}/status`);
+        if (res.data?.success) {
+          const newData = res.data.data;
+          setPaymentInfo(newData);
+          setPaymentStatus(newData.status);
+        }
+      } catch (err) {
+        console.error("Error polling payment status", err);
+      }
+    };
+
+    const codeToPoll = paymentCodeParam || paymentInfo?.paymentCode;
+
+    if (codeToPoll && (paymentStatus === 'PENDING' || paymentStatus === 'PARTIALLY_PAID')) {
+      // First check immediately if refreshed and no paymentInfo
+      if (!paymentInfo && paymentCodeParam) {
+        checkPaymentStatus(paymentCodeParam);
+      }
+
+      intervalId = setInterval(() => {
+        checkPaymentStatus(codeToPoll);
+      }, 3000); // Poll every 3 seconds
+    }
+
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, [paymentCodeParam, paymentInfo?.paymentCode, paymentStatus]);
 
   const [provinces, setProvinces] = useState<any[]>([]);
   const [districts, setDistricts] = useState<any[]>([]);
 
   useEffect(() => {
     // Fetch provinces
-    fetch('https://provinces.open-api.vn/api/p/')
+    fetch('https://esgoo.net/api-tinhthanh/1/0.htm')
       .then(res => res.json())
-      .then(data => setProvinces(data))
+      .then(res => {
+        if (res.error === 0) {
+          const formattedProvinces = res.data.map((p: any) => ({
+            code: p.id,
+            name: p.full_name
+          }));
+          setProvinces(formattedProvinces);
+        }
+      })
       .catch(err => console.error("Error fetching provinces:", err));
   }, []);
 
@@ -52,9 +120,17 @@ function CheckoutPage() {
     setFormData({ ...formData, city: provinceName, district: '' });
 
     if (provinceCode) {
-      fetch(`https://provinces.open-api.vn/api/p/${provinceCode}?depth=2`)
+      fetch(`https://esgoo.net/api-tinhthanh/2/${provinceCode}.htm`)
         .then(res => res.json())
-        .then(data => setDistricts(data.districts))
+        .then(res => {
+          if (res.error === 0) {
+            const formattedDistricts = res.data.map((d: any) => ({
+              code: d.id,
+              name: d.full_name
+            }));
+            setDistricts(formattedDistricts);
+          }
+        })
         .catch(err => console.error("Error fetching districts:", err));
     } else {
       setDistricts([]);
@@ -160,22 +236,130 @@ function CheckoutPage() {
     const orderData = {
       orderItems,
       shippingAddress: formData,
-      paymentMethod: 'COD',
+      paymentMethod,
       itemsPrice: totalPrice,
       shippingPrice: 0,
       totalPrice: totalPrice
     };
 
     try {
-      await api.post('/orders', orderData);
-      toast.success('Đặt hàng thành công!');
-      clearCart();
-      navigate('/order-success');
-    } catch (error) {
+      setIsProcessing(true);
+      const res = await api.post('/orders', orderData);
+      const createdOrder = res.data;
+
+      if (paymentMethod === 'SePay') {
+        try {
+          const payRes = await api.post('/payments/create', { orderId: createdOrder._id });
+          setPaymentInfo(payRes.data);
+          // Thêm query string vào URL để f5 không bị mất
+          window.history.pushState({}, '', `/checkout?paymentCode=${payRes.data.transferContent}`);
+          clearCart();
+          toast.success('Vui lòng quét mã QR để thanh toán');
+        } catch (payErr: any) {
+          console.error(payErr);
+          toast.error(payErr.response?.data?.message || 'Lỗi tạo thanh toán SePay');
+        }
+      } else {
+        toast.success('Đặt hàng thành công!');
+        clearCart();
+        navigate('/order-success');
+      }
+    } catch (error: any) {
       console.error(error);
-      toast.error('Có lỗi xảy ra khi đặt hàng');
+      toast.error(error.response?.data?.message || 'Có lỗi xảy ra khi đặt hàng');
+    } finally {
+      setIsProcessing(false);
     }
   };
+
+  if (paymentInfo) {
+    return (
+      <div className="checkout-page-wrapper">
+        <Header />
+        <main className="checkout-payment-container">
+          <div className="payment-receipt-card">
+
+            <div className="payment-receipt-header">
+              <h2 className="payment-receipt-title">THANH TOÁN ĐƠN HÀNG</h2>
+              <p className="payment-receipt-subtitle">Mã đơn hàng: <strong>{paymentInfo.transferContent || 'DH12345678'}</strong></p>
+            </div>
+
+            <div className="payment-receipt-body">
+              <div className="payment-qr-wrapper">
+                <img src={paymentInfo.qrUrl} alt="QR Code" className="payment-qr-img" />
+              </div>
+
+              <div className="payment-scan-instruction">
+                <FaMobileAlt /> Mở app ngân hàng và quét mã QR
+              </div>
+
+              <div className="payment-details-box">
+                <div className="payment-detail-row payment-amount-row">
+                  <span className="payment-detail-label">Số tiền</span>
+                  <span className="payment-detail-value amount-highlight">{formatPrice(paymentInfo.amount)}</span>
+                </div>
+
+                <div className="payment-detail-row">
+                  <span className="payment-detail-label">Ngân hàng</span>
+                  <span className="payment-detail-value">{paymentInfo.bankCode}</span>
+                </div>
+
+                <div className="payment-detail-row">
+                  <span className="payment-detail-label">Số TK</span>
+                  <span className="payment-detail-value">
+                    {paymentInfo.accountNumber} <button type="button" className="copy-btn" onClick={() => handleCopy(paymentInfo.accountNumber)}><FaCopy /></button>
+                  </span>
+                </div>
+
+                <div className="payment-detail-row">
+                  <span className="payment-detail-label">Chủ TK</span>
+                  <span className="payment-detail-value">{paymentInfo.accountName}</span>
+                </div>
+
+                <div className="payment-detail-row">
+                  <span className="payment-detail-label">Nội dung</span>
+                  <span className="payment-detail-value">
+                    <span className="payment-content-badge">{paymentInfo.transferContent}</span>
+                    <button type="button" className="copy-btn" onClick={() => handleCopy(paymentInfo.transferContent)}><FaCopy /></button>
+                  </span>
+                </div>
+              </div>
+
+              <div className="payment-status-divider"></div>
+
+              {paymentStatus === 'PARTIALLY_PAID' && (
+                <div style={{ padding: '15px', backgroundColor: '#e20f0fff', color: '#000000ff', borderRadius: '8px', marginBottom: '15px', border: '1px solid #ffeeba', fontSize: '14px', textAlign: 'center' }}>
+                  <strong>Cảnh báo:</strong> Hệ thống ghi nhận bạn đã chuyển thiếu <strong>{formatPrice(paymentInfo.amount - (paymentInfo.amountReceived || 0))}</strong>.<br />
+                  Mã QR ở trên đã được tự động cập nhật với số tiền còn thiếu. Vui lòng quét lại để thanh toán nốt.
+                </div>
+              )}
+
+              {paymentStatus === 'OVERPAID' && (
+                <div style={{ padding: '15px', backgroundColor: '#cce5ff', color: '#004085', borderRadius: '8px', marginBottom: '15px', border: '1px solid #b8daff', fontSize: '14px', textAlign: 'center' }}>
+                  <strong>Thanh toán dư:</strong> Đơn hàng đã được thanh toán thành công, tuy nhiên bạn đã chuyển dư <strong>{formatPrice((paymentInfo.amountReceived || 0) - paymentInfo.amount)}</strong>. Vui lòng liên hệ CSKH để được hoàn lại tiền thừa.
+                </div>
+              )}
+
+              <div className="payment-status-text">
+                <FaHourglassHalf /> {
+                  paymentStatus === 'PENDING' ? 'Đang chờ thanh toán...' :
+                    (paymentStatus === 'PAID' ? 'Thanh toán thành công' :
+                      (paymentStatus === 'PARTIALLY_PAID' ? 'Chưa thanh toán đủ' :
+                        (paymentStatus === 'OVERPAID' ? 'Thanh toán thành công (Chuyển dư)' : 'Giao dịch thất bại')))
+                }
+              </div>
+
+              <div style={{ marginTop: '25px', textAlign: 'center' }}>
+                <Link to="/order-success" className="checkout-payment-return-link" style={{ fontSize: '14px', textDecoration: 'underline' }}>Trở về trang chủ</Link>
+              </div>
+            </div>
+
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="checkout-page-wrapper">
@@ -185,12 +369,12 @@ function CheckoutPage() {
 
           {/* LEFT COLUMN: FORM */}
           <div className="checkout-left">
-            <div className="pdp-breadcrumb" style={{ padding: 0, marginBottom: '20px' }}>
+            <div className="pdp-breadcrumb checkout-breadcrumb">
               <Link to="/cart">Giỏ hàng</Link>
               <FaChevronRight className="pdp-breadcrumb-sep" size={10} />
-              <span className="pdp-breadcrumb-current" style={{ color: '--orange-light', fontWeight: 500 }}>Thông tin vận chuyển</span>
+              <span className="pdp-breadcrumb-current checkout-step-active">Thông tin vận chuyển</span>
               <FaChevronRight className="pdp-breadcrumb-sep" size={10} />
-              <span className="pdp-breadcrumb-current" style={{ color: 'var(--dark-light)', fontWeight: 400 }}>Phương thức thanh toán</span>
+              <span className="pdp-breadcrumb-current checkout-step-inactive">Phương thức thanh toán</span>
             </div>
 
             <h1 className="checkout-title">Thông tin thanh toán</h1>
@@ -280,9 +464,25 @@ function CheckoutPage() {
               </div>
             </div>
 
-            <div className="checkout-actions">
+            <div className="checkout-form-group full-width checkout-payment-method-section">
+              <h3 className="checkout-payment-method-title">Phương thức thanh toán</h3>
+              <div className="checkout-payment-method-list">
+                {/* <label className="checkout-payment-method-label">
+                  <input type="radio" name="paymentMethod" value="COD" checked={paymentMethod === 'COD'} onChange={(e) => setPaymentMethod(e.target.value)} className="checkout-payment-method-radio" />
+                  Thanh toán khi nhận hàng (COD)
+                </label> */}
+                <label className="checkout-payment-method-label">
+                  <input type="radio" name="paymentMethod" value="SePay" checked={paymentMethod === 'SePay'} onChange={(e) => setPaymentMethod(e.target.value)} className="checkout-payment-method-radio" />
+                  Chuyển khoản qua mã QR
+                </label>
+              </div>
+            </div>
+
+            <div className="checkout-actions checkout-actions-container">
               <Link to="/cart" className="checkout-back-link">&larr; Giỏ hàng</Link>
-              <button type="submit" className="checkout-submit-btn">Phương thức thanh toán</button>
+              <button type="submit" className="checkout-submit-btn" disabled={isProcessing}>
+                {isProcessing ? 'Đang xử lý...' : (paymentMethod === 'SePay' ? 'Xác nhận & Chuyển khoản' : 'Hoàn tất đặt hàng')}
+              </button>
             </div>
           </div>
 
@@ -319,7 +519,7 @@ function CheckoutPage() {
                 </div>
                 <div className="checkout-total-row">
                   <span>Phí ship</span>
-                  <span style={{ color: 'black', fontWeight: 'bold' }}>Free</span>
+                  <span className="checkout-free-shipping">Free</span>
                 </div>
               </div>
 

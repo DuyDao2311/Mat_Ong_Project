@@ -48,6 +48,10 @@ const productSchema = new mongoose.Schema(
             required: true,
             default: 0,
         },
+        sold: {
+            type: Number,
+            default: 0,
+        },
         isFeatured: {
             type: Boolean,
             default: false,

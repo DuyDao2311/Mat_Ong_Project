@@ -2,7 +2,8 @@ import { useEffect, useState, useContext } from 'react';
 import api from '../../services/api';
 import { AuthContext } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
-import { FaTrash, FaEdit, FaPlus } from 'react-icons/fa';
+import { FaTrash, FaPlus } from 'react-icons/fa';
+import { MdOutlineEdit } from "react-icons/md";
 import axios from 'axios';
 
 const BannerList = () => {
@@ -137,18 +138,19 @@ const BannerList = () => {
                             <tr key={b._id}>
                                 <td>
                                     {b.image && (
-                                        <img src={resolveImageUrl(b.image)} alt={b.title || 'Banner'} style={{ width: '150px', height: 'auto', borderRadius: '4px' }} />
+                                        <img src={resolveImageUrl(b.image)} alt={b.title || 'Banner'} style={{ width: '180px', height: '100px', objectFit: 'cover' }} />
                                     )}
                                 </td>
                                 <td>{b.position || 1}</td>
                                 <td>
-                                    <span style={{ color: b.isActive ? 'green' : 'red', fontWeight: 'bold' }}>
+                                    <span className={`admin-status-badge ${b.isActive ? 'active' : 'inactive'}`}>
+                                        <span className="dot"></span>
                                         {b.isActive ? 'Đang bật' : 'Đã tắt'}
                                     </span>
                                 </td>
                                 <td>
                                     <div className="admin-action-btns">
-                                        <button onClick={() => handleEdit(b)} className="admin-btn-icon edit" title="Sửa"><FaEdit /></button>
+                                        <button onClick={() => handleEdit(b)} className="admin-btn-icon edit" title="Sửa"><MdOutlineEdit /></button>
                                         <button onClick={() => deleteHandler(b._id)} className="admin-btn-icon delete" title="Xóa"><FaTrash /></button>
                                     </div>
                                 </td>
@@ -182,9 +184,9 @@ const BannerList = () => {
                             </div>
                             <div className="admin-form-group">
                                 <label className="admin-label">Vị trí (1, 2, hoặc 3)</label>
-                                <select 
-                                    className="admin-input" 
-                                    value={formData.position} 
+                                <select
+                                    className="admin-input"
+                                    value={formData.position}
                                     onChange={(e) => setFormData({ ...formData, position: Number(e.target.value) })}
                                 >
                                     <option value={1}>Vị trí 1 (Trái)</option>
@@ -193,11 +195,11 @@ const BannerList = () => {
                                 </select>
                             </div>
                             <div className="admin-form-group" style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '15px' }}>
-                                <input 
-                                    type="checkbox" 
-                                    id="isActive" 
-                                    checked={formData.isActive} 
-                                    onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })} 
+                                <input
+                                    type="checkbox"
+                                    id="isActive"
+                                    checked={formData.isActive}
+                                    onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
                                     style={{ width: '20px', height: '20px' }}
                                 />
                                 <label htmlFor="isActive" className="admin-label" style={{ marginBottom: 0 }}>Hiển thị Banner này</label>

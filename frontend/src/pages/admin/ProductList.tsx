@@ -2,8 +2,9 @@ import { useEffect, useState, useContext } from 'react';
 import api from '../../services/api';
 import { AuthContext } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
-import { FaTrash, FaEdit, FaPlus } from 'react-icons/fa';
+import { FaTrash, FaPlus } from 'react-icons/fa';
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
+import { MdOutlineEdit } from "react-icons/md";
 import axios from 'axios';
 
 const ProductList = () => {
@@ -172,7 +173,7 @@ const ProductList = () => {
                                 <td>{p.countInStock}</td>
                                 <td>
                                     <div className="admin-action-btns">
-                                        <button onClick={() => handleEdit(p)} className="admin-btn-icon edit" title="Sửa"><FaEdit /></button>
+                                        <button onClick={() => handleEdit(p)} className="admin-btn-icon edit" title="Sửa"><MdOutlineEdit /></button>
                                         <button onClick={() => deleteHandler(p._id)} className="admin-btn-icon delete" title="Xóa"><FaTrash /></button>
                                     </div>
                                 </td>
@@ -217,54 +218,54 @@ const ProductList = () => {
                             </h2>
                         </div>
                         <div className="admin-modal-body">
-                                <div className="admin-form-grid">
-                                    <div className="admin-form-group">
-                                        <label className="admin-label">Tên sản phẩm</label>
-                                        <input type="text" required className="admin-input" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
-                                    </div>
-                                    <div className="admin-form-group">
-                                        <label className="admin-label">Giá (VNĐ)</label>
-                                        <input type="number" required className="admin-input" value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} />
-                                    </div>
-                                    <div className="admin-form-group">
-                                        <label className="admin-label">Hình ảnh (Upload)</label>
-                                        <input type="file" onChange={uploadFileHandler} className="admin-input" />
-                                        {uploading && <p className="text-sm text-blue-500 mt-1">Đang upload...</p>}
-                                        {formData.images?.length > 0 && (
-                                            <div className="mt-2 text-sm text-green-600 font-medium">✓ Đã tải ảnh lên thành công</div>
-                                        )}
-                                    </div>
-                                    <div className="admin-form-group">
-                                        <label className="admin-label">Danh mục</label>
-                                        <select required className="admin-input" value={formData.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })}>
-                                            <option value="" disabled>-- Chọn danh mục --</option>
-                                            {categories.map((c: any) => (
-                                                <option key={c._id} value={c.name}>{c.name}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                    <div className="admin-form-group">
-                                        <label className="admin-label">Xuất xứ</label>
-                                        <input type="text" required className="admin-input" value={formData.origin} onChange={(e) => setFormData({ ...formData, origin: e.target.value })} />
-                                    </div>
-                                    <div className="admin-form-group">
-                                        <label className="admin-label">Trọng lượng/Dung tích</label>
-                                        <input type="text" required className="admin-input" value={formData.weight} onChange={(e) => setFormData({ ...formData, weight: e.target.value })} />
-                                    </div>
-                                    <div className="admin-form-group">
-                                        <label className="admin-label">Tồn kho</label>
-                                        <input type="number" required className="admin-input" value={formData.countInStock} onChange={(e) => setFormData({ ...formData, countInStock: e.target.value })} />
-                                    </div>
-                                    <div className="admin-form-group full-width">
-                                        <label className="admin-label">Mô tả</label>
-                                        <textarea required className="admin-input" rows={3} value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })}></textarea>
-                                    </div>
+                            <div className="admin-form-grid">
+                                <div className="admin-form-group">
+                                    <label className="admin-label">Tên sản phẩm</label>
+                                    <input type="text" required className="admin-input" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
+                                </div>
+                                <div className="admin-form-group">
+                                    <label className="admin-label">Giá (VNĐ)</label>
+                                    <input type="number" required className="admin-input" value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} />
+                                </div>
+                                <div className="admin-form-group">
+                                    <label className="admin-label">Hình ảnh (Upload)</label>
+                                    <input type="file" onChange={uploadFileHandler} className="admin-input" />
+                                    {uploading && <p className="text-sm text-blue-500 mt-1">Đang upload...</p>}
+                                    {formData.images?.length > 0 && (
+                                        <div className="mt-2 text-sm text-green-600 font-medium">✓ Đã tải ảnh lên thành công</div>
+                                    )}
+                                </div>
+                                <div className="admin-form-group">
+                                    <label className="admin-label">Danh mục</label>
+                                    <select required className="admin-input" value={formData.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })}>
+                                        <option value="" disabled>-- Chọn danh mục --</option>
+                                        {categories.map((c: any) => (
+                                            <option key={c._id} value={c.name}>{c.name}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="admin-form-group">
+                                    <label className="admin-label">Xuất xứ</label>
+                                    <input type="text" required className="admin-input" value={formData.origin} onChange={(e) => setFormData({ ...formData, origin: e.target.value })} />
+                                </div>
+                                <div className="admin-form-group">
+                                    <label className="admin-label">Trọng lượng/Dung tích</label>
+                                    <input type="text" required className="admin-input" value={formData.weight} onChange={(e) => setFormData({ ...formData, weight: e.target.value })} />
+                                </div>
+                                <div className="admin-form-group">
+                                    <label className="admin-label">Tồn kho</label>
+                                    <input type="number" required className="admin-input" value={formData.countInStock} onChange={(e) => setFormData({ ...formData, countInStock: e.target.value })} />
+                                </div>
+                                <div className="admin-form-group full-width">
+                                    <label className="admin-label">Mô tả</label>
+                                    <textarea required className="admin-input" rows={3} value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })}></textarea>
                                 </div>
                             </div>
-                            <div className="admin-modal-footer">
-                                <button type="button" onClick={() => setShowModal(false)} className="admin-btn-secondary">Hủy</button>
-                                <button type="submit" className="admin-btn-primary">{editId ? 'Lưu thay đổi' : 'Thêm mới'}</button>
-                            </div>
+                        </div>
+                        <div className="admin-modal-footer">
+                            <button type="button" onClick={() => setShowModal(false)} className="admin-btn-secondary">Hủy</button>
+                            <button type="submit" className="admin-btn-primary">{editId ? 'Lưu thay đổi' : 'Thêm mới'}</button>
+                        </div>
                     </form>
                 </div>
             )}

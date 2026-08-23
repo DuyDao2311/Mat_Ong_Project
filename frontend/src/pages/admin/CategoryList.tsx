@@ -2,7 +2,8 @@ import { useEffect, useState, useContext } from 'react';
 import api from '../../services/api';
 import { AuthContext } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
-import { FaTrash, FaEdit, FaPlus } from 'react-icons/fa';
+import { FaTrash, FaPlus } from 'react-icons/fa';
+import { MdOutlineEdit } from "react-icons/md";
 
 const CategoryList = () => {
     const { user } = useContext(AuthContext) as any;
@@ -101,7 +102,7 @@ const CategoryList = () => {
                                 <td>{c.description}</td>
                                 <td>
                                     <div className="admin-action-btns">
-                                        <button onClick={() => handleEdit(c)} className="admin-btn-icon edit" title="Sửa"><FaEdit /></button>
+                                        <button onClick={() => handleEdit(c)} className="admin-btn-icon edit" title="Sửa"><MdOutlineEdit /></button>
                                         <button onClick={() => deleteHandler(c._id)} className="admin-btn-icon delete" title="Xóa"><FaTrash /></button>
                                     </div>
                                 </td>

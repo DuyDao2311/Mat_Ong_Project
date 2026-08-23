@@ -1,7 +1,9 @@
 import { useContext } from 'react';
 import { useLocation, Link, Outlet, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { FaTachometerAlt, FaUsers, FaSignOutAlt, FaBox, FaTags, FaImages } from 'react-icons/fa';
+import { FaThLarge, FaUsers, FaSignOutAlt, FaShoppingBag, FaCubes, FaClipboardList } from 'react-icons/fa';
+import { FaImage } from "react-icons/fa6";
+import '../pages/admin/Admin.css';
 
 const AdminLayout = () => {
     const { logout } = useContext(AuthContext) as any;
@@ -24,19 +26,22 @@ const AdminLayout = () => {
                 </div>
                 <nav className="admin-nav">
                     <Link to="/admin/dashboard" className={`admin-nav-item ${isActive('/admin/dashboard') ? 'active' : ''}`}>
-                        <FaTachometerAlt className="admin-nav-icon" /> Dashboard
+                        <span className="admin-icon-box"><FaThLarge className="admin-nav-icon" /></span> <span className="admin-nav-text">Dashboard</span>
                     </Link>
                     <Link to="/admin/products" className={`admin-nav-item ${isActive('/admin/products') ? 'active' : ''}`}>
-                        <FaBox className="admin-nav-icon" /> Sản phẩm
+                        <span className="admin-icon-box"><FaShoppingBag className="admin-nav-icon" /></span> <span className="admin-nav-text">Sản phẩm</span>
                     </Link>
                     <Link to="/admin/categories" className={`admin-nav-item ${isActive('/admin/categories') ? 'active' : ''}`}>
-                        <FaTags className="admin-nav-icon" /> Danh mục
+                        <span className="admin-icon-box"><FaCubes className="admin-nav-icon" /></span> <span className="admin-nav-text">Danh mục</span>
                     </Link>
                     <Link to="/admin/banners" className={`admin-nav-item ${isActive('/admin/banners') ? 'active' : ''}`}>
-                        <FaImages className="admin-nav-icon" /> Banners
+                        <span className="admin-icon-box"><FaImage className="admin-nav-icon" /></span> <span className="admin-nav-text">Banners</span>
+                    </Link>
+                    <Link to="/admin/orders" className={`admin-nav-item ${isActive('/admin/orders') ? 'active' : ''}`}>
+                        <span className="admin-icon-box"><FaClipboardList className="admin-nav-icon" /></span> <span className="admin-nav-text">Đơn hàng</span>
                     </Link>
                     <Link to="/admin/users" className={`admin-nav-item ${isActive('/admin/users') ? 'active' : ''}`}>
-                        <FaUsers className="admin-nav-icon" /> Người dùng
+                        <span className="admin-icon-box"><FaUsers className="admin-nav-icon" /></span> <span className="admin-nav-text">Người dùng</span>
                     </Link>
                 </nav>
                 <div className="admin-sidebar-footer">
@@ -44,16 +49,16 @@ const AdminLayout = () => {
                         onClick={handleLogout}
                         className="admin-btn-logout"
                     >
-                        <FaSignOutAlt className="mr-2" /> Đăng xuất
+                        <span className="admin-icon-box logout"><FaSignOutAlt className="admin-nav-icon" /></span> <span className="admin-nav-text">Đăng xuất</span>
                     </button>
                 </div>
             </div>
 
             {/* Main Content */}
             <div className="admin-main">
-                <header className="admin-header">
+                {/* <header className="admin-header">
                     <h2 className="admin-header-title">QUẢN TRỊ HỆ THỐNG</h2>
-                </header>
+                </header> */}
                 <main className="admin-content">
                     <Outlet />
                 </main>

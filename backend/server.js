@@ -11,7 +11,14 @@ const app = express();
 
 // Middleware
 app.use(cors());
-app.use(express.json());
+app.use(express.json({
+    verify: (req, res, buf) => {
+        // Lưu raw body cho webhook route để xác minh HMAC signature
+        if (req.url === '/sepay/webhook' || req.originalUrl === '/api/payments/sepay/webhook') {
+            req.rawBody = buf.toString('utf8');
+        }
+    }
+}));
 
 import Product from './models/Product.js';
 import userRoutes from './routes/userRoutes.js';
@@ -22,6 +29,7 @@ import cartRoutes from './routes/cartRoutes.js';
 import bannerRoutes from './routes/bannerRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import searchRoutes from './routes/searchRoutes.js';
+import paymentRoutes from './routes/paymentRoutes.js';
 // Routes
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
@@ -31,6 +39,7 @@ app.use('/api/cart', cartRoutes);
 app.use('/api/banners', bannerRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/search', searchRoutes);
+app.use('/api/payments', paymentRoutes);
 const __dirname = path.resolve();
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
