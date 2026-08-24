@@ -123,13 +123,16 @@ function ProductListPage() {
   }) : [];
 
   const sortedProducts = [...filteredProducts].sort((a, b) => {
-    if (sortOption === 'Từ thấp đến cao') {
+    if (sortOption === 'Giá từ thấp đến cao') {
       return (a.price || 0) - (b.price || 0);
     }
-    if (sortOption === 'Từ cao đến thấp') {
+    if (sortOption === 'Giá từ cao đến thấp') {
       return (b.price || 0) - (a.price || 0);
     }
-    return 0; // 'Bán chạy nhất' hoặc mặc định
+    if (sortOption === 'Bán chạy nhất') {
+      return (b.sold || 0) - (a.sold || 0);
+    }
+    return 0; // Default fallback
   });
 
   const totalPages = Math.ceil(sortedProducts.length / productsPerPage);
