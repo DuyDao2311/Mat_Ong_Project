@@ -117,7 +117,7 @@ export const adminNewOrderTemplate = (order) => {
 
       <p style="margin-top: 30px; font-size: 14px; text-align: center; color: #777;">
         Vui lòng đăng nhập vào trang quản trị để xử lý đơn hàng này.<br><br>
-        <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}/admin/orders" style="display: inline-block; padding: 10px 20px; background-color: #ef4444; color: #ffffff; text-decoration: none; border-radius: 4px; font-weight: bold;">Đăng nhập trang quản trị</a>
+        <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}" style="display: inline-block; padding: 10px 20px; background-color: #ef4444; color: #ffffff; text-decoration: none; border-radius: 4px; font-weight: bold;">Đăng nhập trang quản trị</a>
       </p>
     </div>
   `;
