@@ -95,6 +95,14 @@ function CheckoutPage() {
     };
   }, [paymentCodeParam, paymentInfo?.paymentCode, paymentStatus]);
 
+  // Navigate to success page when payment is successful
+  useEffect(() => {
+    if (paymentStatus === 'PAID' || paymentStatus === 'OVERPAID') {
+      toast.success('Thanh toán thành công!');
+      navigate('/order-success');
+    }
+  }, [paymentStatus, navigate]);
+
   const [provinces, setProvinces] = useState<any[]>([]);
   const [districts, setDistricts] = useState<any[]>([]);
 
