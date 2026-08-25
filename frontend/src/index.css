@@ -2159,6 +2159,10 @@ textarea.admin-input {
    PRODUCT LIST PAGE BREADCRUMB
    ======================================== */
 
+.product-list-page-container {
+  background-color: var(--cream);
+  min-height: 100vh;
+}
 
 .plp-layout {
   max-width: var(--max-width);
@@ -4796,9 +4800,199 @@ textarea.admin-input {
 }
 
 /* ===== CONTACT PAGE ===== */
+
+/* Map Section */
+.contact-map-section {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  margin-bottom: 2rem;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+@media (min-width: 768px) {
+  .contact-map-section {
+    height: 450px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .contact-map-section {
+    height: 500px;
+  }
+}
+
+/* Map Info Overlay Card */
+.contact-map-overlay {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 1;
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 14px 16px;
+  min-width: 260px;
+  max-width: 280px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  font-family: 'Roboto', Arial, sans-serif;
+  animation: mapOverlaySlideIn 0.4s ease-out;
+}
+
+@keyframes mapOverlaySlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.contact-map-overlay-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.contact-map-overlay-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+  line-height: 1.3;
+  flex: 1;
+}
+
+.contact-map-overlay-actions-top {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.contact-map-overlay-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f0f7ff;
+  color: #1a73e8;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  font-size: 15px;
+}
+
+.contact-map-overlay-icon-btn:hover {
+  background: #d2e3fc;
+  transform: scale(1.1);
+}
+
+.contact-map-overlay-address {
+  font-size: 0.8rem;
+  color: #5f6368;
+  margin: 0 0 8px 0;
+  line-height: 1.4;
+}
+
+.contact-map-overlay-rating {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 12px;
+}
+
+.contact-map-overlay-rating-score {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.contact-map-overlay-stars {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  color: #fbbc04;
+  font-size: 0.72rem;
+}
+
+.contact-map-overlay-review-count {
+  font-size: 0.78rem;
+  color: #70757a;
+}
+
+.contact-map-overlay-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.contact-map-overlay-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.contact-map-overlay-btn-directions {
+  background: #1a73e8;
+  color: #ffffff;
+}
+
+.contact-map-overlay-btn-directions:hover {
+  background: #1557b0;
+  box-shadow: 0 2px 6px rgba(26, 115, 232, 0.3);
+}
+
+.contact-map-overlay-btn-open {
+  background: #f1f3f4;
+  color: #1a73e8;
+}
+
+.contact-map-overlay-btn-open:hover {
+  background: #e2e4e6;
+}
+
+/* Responsive overlay for mobile */
+@media (max-width: 480px) {
+  .contact-map-overlay {
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    max-width: none;
+    min-width: unset;
+    padding: 12px 14px;
+  }
+
+  .contact-map-overlay-name {
+    font-size: 0.88rem;
+  }
+
+  .contact-map-overlay-buttons {
+    flex-direction: column;
+  }
+
+  .contact-map-overlay-btn {
+    justify-content: center;
+  }
+}
+
 .contact-page {
   min-height: 100vh;
-  background-color: #FFFBF5;
+  background-color: var(--cream);
   padding: 4rem 1rem;
   font-family: 'Roboto', sans-serif;
   margin-top: 5rem;
@@ -4819,8 +5013,9 @@ textarea.admin-input {
 }
 
 .contact-container {
-  max-width: 80rem;
+  max-width: var(--max-width);
   margin: 0 auto;
+  padding: 0 20px;
 }
 
 .contact-info-cards {
@@ -4830,6 +5025,7 @@ textarea.admin-input {
   border: 1px solid #f3f4f6;
   padding: 1.5rem;
   margin-bottom: 4rem;
+  /* height: 130px; */
 }
 
 @media (min-width: 768px) {
@@ -4927,7 +5123,7 @@ textarea.admin-input {
   font-family: 'Playfair Display', serif;
   font-weight: 700;
   color: #111827;
-  margin-bottom: -23px;
+  margin-bottom: -10px;
 }
 
 .contact-subtitle {
@@ -4935,7 +5131,7 @@ textarea.admin-input {
   font-family: 'Playfair Display', serif;
   font-style: italic;
   color: var(--gold);
-  margin-bottom: -23px;
+  margin-bottom: -10px;
 }
 
 @media (min-width: 768px) {
@@ -4943,6 +5139,7 @@ textarea.admin-input {
   .contact-title,
   .contact-subtitle {
     font-size: 3rem;
+    margin-bottom: -23px;
   }
 }
 
@@ -5217,6 +5414,7 @@ textarea.admin-input {
   color: black;
   font-weight: bold;
 }
+
 /* ===== PAYMENT RECEIPT ===== */
 .checkout-payment-container {
   display: flex;
@@ -5230,7 +5428,7 @@ textarea.admin-input {
   max-width: 450px;
   background: #fff;
   border-radius: 12px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
   overflow: hidden;
   border: 1px solid #f0f0f0;
 }
@@ -5255,6 +5453,7 @@ textarea.admin-input {
   color: #555;
   font-size: 0.95rem;
 }
+
 .payment-receipt-subtitle strong {
   color: #333;
 }
@@ -5305,6 +5504,7 @@ textarea.admin-input {
   align-items: center;
   margin-bottom: 16px;
 }
+
 .payment-detail-row:last-child {
   margin-bottom: 0;
 }
@@ -5344,6 +5544,7 @@ textarea.admin-input {
   align-items: center;
   justify-content: center;
 }
+
 .copy-btn:hover {
   color: #E8921A;
 }
@@ -5499,11 +5700,13 @@ textarea.admin-input {
     flex-direction: column;
   }
 }
+
 /* ========================================
    CUSTOM ADMIN REDESIGN (Banner List & Layout)
    ======================================== */
 .admin-layout {
-  background-color: #FDF9F1; /* light cream */
+  background-color: #FDF9F1;
+  /* light cream */
   min-height: 100vh;
   display: flex;
 }
@@ -5526,7 +5729,8 @@ textarea.admin-input {
   font-family: 'Playfair Display', serif;
   font-size: 1.8rem;
   font-weight: 900;
-  color: #8B6508; /* gold-dark */
+  color: #8B6508;
+  /* gold-dark */
   letter-spacing: 2px;
   text-decoration: none;
   display: inline-block;
@@ -5557,7 +5761,8 @@ textarea.admin-input {
 }
 
 .admin-nav-item.active {
-  background-color: #FDF1D7 !important; /* light gold background */
+  background-color: #FDF1D7 !important;
+  /* light gold background */
   color: #333333 !important;
   font-weight: 700;
 }
@@ -5568,7 +5773,8 @@ textarea.admin-input {
 }
 
 .admin-nav-item.active .admin-nav-icon {
-  color: #A37A2C !important; /* gold */
+  color: #A37A2C !important;
+  /* gold */
 }
 
 .admin-sidebar-footer {
@@ -5626,7 +5832,8 @@ textarea.admin-input {
   background-color: #F5A623 !important;
   color: #000 !important;
   border: none;
-  border-radius: 50px !important; /* pill shape */
+  border-radius: 50px !important;
+  /* pill shape */
   padding: 10px 24px;
   font-weight: 600;
   display: flex;
@@ -5665,10 +5872,25 @@ textarea.admin-input {
   border-bottom: 1px solid #F0E5D1 !important;
 }
 
-.admin-table th:nth-child(1), .admin-table td:nth-child(1) { text-align: left; }
-.admin-table th:nth-child(2), .admin-table td:nth-child(2) { text-align: center; }
-.admin-table th:nth-child(3), .admin-table td:nth-child(3) { text-align: center; }
-.admin-table th:nth-child(4), .admin-table td:nth-child(4) { text-align: right; }
+.admin-table th:nth-child(1),
+.admin-table td:nth-child(1) {
+  text-align: left;
+}
+
+.admin-table th:nth-child(2),
+.admin-table td:nth-child(2) {
+  text-align: center;
+}
+
+.admin-table th:nth-child(3),
+.admin-table td:nth-child(3) {
+  text-align: center;
+}
+
+.admin-table th:nth-child(4),
+.admin-table td:nth-child(4) {
+  text-align: right;
+}
 
 .admin-table td {
   padding: 24px !important;
@@ -5683,7 +5905,7 @@ textarea.admin-input {
 
 .admin-table img {
   border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   display: block;
 }
 
@@ -5754,4 +5976,3 @@ textarea.admin-input {
   transform: scale(1.1);
   background: transparent !important;
 }
-

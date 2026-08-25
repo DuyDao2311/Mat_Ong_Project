@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { FaMapMarkerAlt, FaEnvelope, FaPhoneAlt, FaArrowRight } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import { FaMapMarkerAlt, FaEnvelope, FaPhoneAlt, FaArrowRight, FaChevronRight, FaDirections, FaExternalLinkAlt } from 'react-icons/fa';
+import Map, { Marker } from 'react-map-gl/mapbox';
+import 'mapbox-gl/dist/mapbox-gl.css';
 import logo from '../../image/logo/image.png';
 import '../index.css';
 
@@ -30,8 +33,89 @@ const ContactPage = () => {
   return (
     <>
       <Header />
-      <div className="contact-page">
+
+      <div className="contact-page" style={{ marginTop: '0', paddingTop: '0' }}>
+        {/* Breadcrumb */}
+        <div className="pdp-breadcrumb-wrapper" style={{ background: 'transparent', marginBottom: '1rem' }}>
+          <div className="pdp-breadcrumb">
+            <Link to="/">Trang chủ</Link>
+            <FaChevronRight className="pdp-breadcrumb-sep" size={10} />
+            <span className="pdp-breadcrumb-current">Liên hệ</span>
+          </div>
+        </div>
+
         <div className="contact-container">
+
+          {/* Map Section */}
+          <div className="contact-map-section">
+            <Map
+              mapboxAccessToken={import.meta.env.VITE_MAPBOX_TOKEN}
+              initialViewState={{
+                longitude: 105.361374,
+                latitude: 23.278082,
+                zoom: 15
+              }}
+              style={{ width: '100%', height: '100%' }}
+              mapStyle="mapbox://styles/mapbox/streets-v11"
+            >
+              <Marker longitude={105.361374} latitude={23.278082} color="red" />
+            </Map>
+
+            {/* Map Info Overlay */}
+            <div className="contact-map-overlay">
+              <div className="contact-map-overlay-header">
+                <h3 className="contact-map-overlay-name">Mật Ong Ngọc Trang</h3>
+                <div className="contact-map-overlay-actions-top">
+                  <a
+                    href="https://www.google.com/maps/dir/?api=1&destination=23.278082,105.361374"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="contact-map-overlay-icon-btn"
+                    title="Xem đường đi"
+                  >
+                    <FaDirections />
+                  </a>
+                  <a
+                    href="https://www.google.com/maps/search/?api=1&query=23.278082,105.361374"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="contact-map-overlay-icon-btn"
+                    title="Mở trong Google Maps"
+                  >
+                    <FaExternalLinkAlt size={13} />
+                  </a>
+                </div>
+              </div>
+              <p className="contact-map-overlay-address">
+                Thôn Đồng Thanh, Xã Đồng Văn, Tỉnh Tuyên Quang
+              </p>
+              {/* <div className="contact-map-overlay-rating">
+                <span className="contact-map-overlay-rating-score">4.8</span>
+                <div className="contact-map-overlay-stars">
+                  <FaStar /><FaStar /><FaStar /><FaStar /><FaStarHalfAlt />
+                </div>
+                <span className="contact-map-overlay-review-count">(12)</span>
+              </div> */}
+              {/* <div className="contact-map-overlay-buttons">
+                <a
+                  href="https://www.google.com/maps/dir/?api=1&destination=23.278082,105.361374"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="contact-map-overlay-btn contact-map-overlay-btn-directions"
+                >
+                  <FaDirections /> Xem đường đi
+                </a>
+                <a
+                  href="https://www.google.com/maps/search/?api=1&query=23.278082,105.361374"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="contact-map-overlay-btn contact-map-overlay-btn-open"
+                >
+                  <FaExternalLinkAlt size={12} /> Mở Google Maps
+                </a>
+              </div> */}
+            </div>
+          </div>
 
           {/* Top Contact Info Cards */}
           <div className="contact-info-cards">
