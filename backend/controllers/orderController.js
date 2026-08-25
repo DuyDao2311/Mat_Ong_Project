@@ -1,7 +1,7 @@
 import Order from '../models/Order.js';
 import Product from '../models/Product.js';
 import { sendEmail } from '../utils/sendEmail.js';
-import { orderCreatedTemplate, orderStatusUpdateTemplate } from '../utils/emailTemplates.js';
+import { orderCreatedTemplate, orderStatusUpdateTemplate, adminNewOrderTemplate, adminOrderPaidTemplate } from '../utils/emailTemplates.js';
 
 const generateOrderId = () => {
   const timestamp = Date.now().toString().slice(-6);
@@ -58,16 +58,7 @@ export const addOrderItems = async (req, res) => {
       });
     }
 
-    // 3. Gửi email xác nhận đơn hàng (Fire-and-forget)
-    if (createdOrder.shippingAddress && createdOrder.shippingAddress.email) {
-      const { html, text } = orderCreatedTemplate(createdOrder);
-      sendEmail({
-        to: createdOrder.shippingAddress.email,
-        subject: `[Mật Ong Quê] Xác nhận đơn hàng ${createdOrder.id}`,
-        html,
-        text
-      });
-    }
+    // 3. Email xác nhận sẽ được gửi sau khi khách thanh toán thành công (xem paymentController.js)
 
     res.status(201).json(createdOrder);
   } catch (error) {
@@ -116,6 +107,7 @@ export const updateOrderStatus = async (req, res) => {
 
     if (order) {
       const previousStatus = order.orderStatus;
+      const previousPaymentStatus = order.paymentStatus;
       order.orderStatus = req.body.status || order.orderStatus;
       
       if (req.body.status === 'DELIVERED') {
@@ -151,7 +143,18 @@ export const updateOrderStatus = async (req, res) => {
         const { html, text } = orderStatusUpdateTemplate(updatedOrder, req.body.status);
         sendEmail({
           to: updatedOrder.shippingAddress.email,
-          subject: `[Mật Ong Quê] Cập nhật trạng thái đơn hàng ${updatedOrder.id}`,
+          subject: `[Mật Ong Ngọc Trang] Cập nhật trạng thái đơn hàng ${updatedOrder.id}`,
+          html,
+          text
+        });
+      }
+
+      // 5. Gửi email thông báo thanh toán thành công cho Admin (Fire-and-forget)
+      if (process.env.EMAIL_USER && req.body.paymentStatus === 'PAID' && previousPaymentStatus !== 'PAID') {
+        const { html, text } = adminOrderPaidTemplate(updatedOrder);
+        sendEmail({
+          to: process.env.EMAIL_USER,
+          subject: `[Thông báo Admin] Khách hàng đã thanh toán đơn hàng ${updatedOrder.id}`,
           html,
           text
         });

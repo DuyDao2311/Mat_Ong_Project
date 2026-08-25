@@ -1,5 +1,7 @@
 import Payment from '../models/Payment.js';
 import Order from '../models/Order.js';
+import { sendEmail } from '../utils/sendEmail.js';
+import { orderCreatedTemplate, adminNewOrderTemplate } from '../utils/emailTemplates.js';
 
 // Generate payment code like DH12345678
 const generatePaymentCode = () => {
@@ -160,16 +162,18 @@ export const sepayWebhook = async (req, res) => {
         // 8. Đánh giá trạng thái
         let newStatus = 'PENDING';
         let isPaid = false;
+        const wasPaid = payment.status === 'PAID' || payment.status === 'OVERPAID';
+
+        console.log(`[Payment Debug] amountReceived: ${payment.amountReceived}, amount: ${payment.amount}, wasPaid: ${wasPaid}`);
 
         if (payment.amountReceived < payment.amount) {
             newStatus = 'PARTIALLY_PAID';
-        } else if (payment.amountReceived === payment.amount) {
-            newStatus = 'PAID';
-            isPaid = true;
-        } else {
-            newStatus = 'OVERPAID';
+        } else if (payment.amountReceived >= payment.amount) {
+            newStatus = payment.amountReceived === payment.amount ? 'PAID' : 'OVERPAID';
             isPaid = true;
         }
+
+        console.log(`[Payment Debug] newStatus: ${newStatus}, isPaid: ${isPaid}`);
 
         // 9. Cập nhật dữ liệu
         payment.status = newStatus;
@@ -182,6 +186,35 @@ export const sepayWebhook = async (req, res) => {
         order.isPaid = isPaid;
         if (isPaid && !order.paidAt) order.paidAt = new Date();
         await order.save();
+
+        // 10. Gửi email xác nhận đơn hàng cho khách (Fire-and-forget)
+        console.log(`[Email Debug] isPaid: ${isPaid}, wasPaid: ${wasPaid}, email: ${order.shippingAddress?.email}, EMAIL_USER: ${process.env.EMAIL_USER}`);
+        if (isPaid && !wasPaid) {
+            if (order.shippingAddress && order.shippingAddress.email) {
+                console.log(`[Email] Gửi email xác nhận đơn hàng cho khách: ${order.shippingAddress.email}`);
+                const customerEmail = orderCreatedTemplate(order);
+                sendEmail({
+                    to: order.shippingAddress.email,
+                    subject: `[Mật Ong Ngọc Trang] Xác nhận đơn hàng ${order.id}`,
+                    html: customerEmail.html,
+                    text: customerEmail.text
+                });
+            } else {
+                console.log(`[Email] Không gửi email cho khách vì thiếu shippingAddress.email`);
+            }
+
+            // 11. Gửi email thông báo "Có đơn hàng mới" cho Admin (Fire-and-forget)
+            if (process.env.EMAIL_USER) {
+                console.log(`[Email] Gửi email thông báo Admin: ${process.env.EMAIL_USER}`);
+                const adminEmail = adminNewOrderTemplate(order);
+                sendEmail({
+                    to: process.env.EMAIL_USER,
+                    subject: `[Thông báo Admin] Có đơn hàng mới - ${order.id}`,
+                    html: adminEmail.html,
+                    text: adminEmail.text
+                });
+            }
+        }
 
         return res.status(200).json({ success: true });
 

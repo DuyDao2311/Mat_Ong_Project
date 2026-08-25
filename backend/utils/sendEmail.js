@@ -28,7 +28,7 @@ export const sendEmail = async ({ to, subject, html, text }) => {
         "api-key": process.env.BREVO_API_KEY,
       },
       body: JSON.stringify({
-        sender: { name: "Mật Ong Quê", email: process.env.EMAIL_USER },
+        sender: { name: "Mật Ong Ngọc Trang", email: process.env.EMAIL_USER },
         to: [{ email: to }],
         subject,
         htmlContent: html,
@@ -40,6 +40,7 @@ export const sendEmail = async ({ to, subject, html, text }) => {
       const errBody = await res.text();
       throw new Error(`Brevo API ${res.status}: ${errBody}`);
     }
+    console.log(`[Email OK] Đã gửi email thành công đến: ${to} | Subject: ${subject}`);
   } catch (error) {
     // Chỉ in lỗi ra console để không làm chết ứng dụng (Fire-and-forget)
     console.error("Lỗi khi gửi email:", error.message);
