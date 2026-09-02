@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { useLocation, Link, Outlet, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { FaThLarge, FaUsers, FaSignOutAlt, FaShoppingBag, FaCubes, FaClipboardList } from 'react-icons/fa';
+import { FaThLarge, FaUsers, FaSignOutAlt, FaShoppingBag, FaCubes, FaClipboardList, FaNewspaper } from 'react-icons/fa';
 import { FaImage } from "react-icons/fa6";
 import '../pages/admin/Admin.css';
 
@@ -39,6 +39,9 @@ const AdminLayout = () => {
                     </Link>
                     <Link to="/admin/orders" className={`admin-nav-item ${isActive('/admin/orders') ? 'active' : ''}`}>
                         <span className="admin-icon-box"><FaClipboardList className="admin-nav-icon" /></span> <span className="admin-nav-text">Đơn hàng</span>
+                    </Link>
+                    <Link to="/admin/news" className={`admin-nav-item ${isActive('/admin/news') ? 'active' : ''}`}>
+                        <span className="admin-icon-box"><FaNewspaper className="admin-nav-icon" /></span> <span className="admin-nav-text">Tin tức</span>
                     </Link>
                     <Link to="/admin/users" className={`admin-nav-item ${isActive('/admin/users') ? 'active' : ''}`}>
                         <span className="admin-icon-box"><FaUsers className="admin-nav-icon" /></span> <span className="admin-nav-text">Người dùng</span>

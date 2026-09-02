@@ -32,7 +32,7 @@ function ProductListPage() {
     setCurrentPage(1);
   }, [location.search]);
   // const [selectedFlavors, setSelectedFlavors] = useState<string[]>([]);
-  const [sortOption, setSortOption] = useState('Bán chạy nhất');
+  const [sortOption, setSortOption] = useState('Mới nhất');
   const [isSortOpen, setIsSortOpen] = useState(false);
 
   useEffect(() => {
@@ -131,6 +131,11 @@ function ProductListPage() {
     }
     if (sortOption === 'Bán chạy nhất') {
       return (b.sold || 0) - (a.sold || 0);
+    }
+    if (sortOption === 'Mới nhất') {
+      const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+      const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+      return dateB - dateA;
     }
     return 0; // Default fallback
   });
@@ -239,7 +244,7 @@ function ProductListPage() {
                     onClick={() => setIsSortOpen(false)}
                   ></div>
                   <div className="plp-sort-menu">
-                    {['Bán chạy nhất', 'Giá từ thấp đến cao', 'Giá từ cao đến thấp'].map(option => (
+                    {['Mới nhất', 'Bán chạy nhất', 'Giá từ thấp đến cao', 'Giá từ cao đến thấp'].map(option => (
                       <div
                         key={option}
                         className={`plp-sort-option ${sortOption === option ? 'active' : ''}`}

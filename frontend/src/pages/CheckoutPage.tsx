@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { CartContext } from '../context/CartContext';
 import { AuthContext } from '../context/AuthContext';
 import Header from '../components/Header';
@@ -10,6 +10,7 @@ import { FaChevronRight, FaMobileAlt, FaCopy, FaHourglassHalf } from 'react-icon
 
 function CheckoutPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const paymentCodeParam = searchParams.get('paymentCode');
 
@@ -17,6 +18,18 @@ function CheckoutPage() {
   const authContext = useContext(AuthContext) as any;
   const { cartItems, totalPrice, clearCart } = cartContext;
   const { user } = authContext;
+
+  // "Mua ngay" flow: use only the single product passed via navigation state
+  const buyNowItem = (location.state as any)?.buyNowItem;
+  const isBuyNow = !!buyNowItem;
+
+  const checkoutItems = isBuyNow
+    ? [{ product: buyNowItem.product, quantity: buyNowItem.quantity }]
+    : cartItems;
+
+  const checkoutTotal = isBuyNow
+    ? buyNowItem.product.price * buyNowItem.quantity
+    : totalPrice;
 
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -218,7 +231,7 @@ function CheckoutPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (cartItems.length === 0) {
+    if (checkoutItems.length === 0) {
       toast.error('Giỏ hàng trống');
       return;
     }
@@ -233,7 +246,7 @@ function CheckoutPage() {
       return;
     }
 
-    const orderItems = cartItems.map((item: any) => ({
+    const orderItems = checkoutItems.map((item: any) => ({
       name: item.product.name,
       qty: item.quantity,
       image: item.product.images?.[0] || '',
@@ -245,9 +258,9 @@ function CheckoutPage() {
       orderItems,
       shippingAddress: formData,
       paymentMethod,
-      itemsPrice: totalPrice,
+      itemsPrice: checkoutTotal,
       shippingPrice: 0,
-      totalPrice: totalPrice
+      totalPrice: checkoutTotal
     };
 
     try {
@@ -261,7 +274,7 @@ function CheckoutPage() {
           setPaymentInfo(payRes.data);
           // Thêm query string vào URL để f5 không bị mất
           window.history.pushState({}, '', `/checkout?paymentCode=${payRes.data.transferContent}`);
-          clearCart();
+          if (!isBuyNow) clearCart();
           toast.success('Vui lòng quét mã QR để thanh toán');
         } catch (payErr: any) {
           console.error(payErr);
@@ -269,7 +282,7 @@ function CheckoutPage() {
         }
       } else {
         toast.success('Đặt hàng thành công!');
-        clearCart();
+        if (!isBuyNow) clearCart();
         navigate('/order-success');
       }
     } catch (error: any) {
@@ -498,7 +511,7 @@ function CheckoutPage() {
           <div className="checkout-right">
             <div className="checkout-summary-box">
               <div className="checkout-items">
-                {cartItems.map((item: any) => (
+                {checkoutItems.map((item: any) => (
                   <div key={item.product._id} className="checkout-item">
                     <div className="checkout-item-img-container">
                       <img src={resolveImageUrl(item.product.images?.[0])} alt={item.product.name} />
@@ -523,7 +536,7 @@ function CheckoutPage() {
               <div className="checkout-totals">
                 <div className="checkout-total-row">
                   <span>Tạm tính</span>
-                  <span>{formatPrice(totalPrice)}</span>
+                  <span>{formatPrice(checkoutTotal)}</span>
                 </div>
                 <div className="checkout-total-row">
                   <span>Phí ship</span>
@@ -534,7 +547,7 @@ function CheckoutPage() {
               <div className="checkout-final-total">
                 <span>Tổng tiền</span>
                 <span className="final-price">
-                  <span className="currency-code">VND</span> {formatPrice(totalPrice)}
+                  <span className="currency-code">VND</span> {formatPrice(checkoutTotal)}
                 </span>
               </div>
             </div>

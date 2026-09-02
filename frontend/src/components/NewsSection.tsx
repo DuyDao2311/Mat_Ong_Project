@@ -1,24 +1,41 @@
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import api from '../services/api';
+
 function NewsSection() {
-  const newsList = [
-    {
-      id: 1,
-      title: 'Phấn Hoa Ong là gì ?',
-      date: '08 Thg 8',
-      image: 'https://via.placeholder.com/400x250/f0b12b/ffffff?text=Phan+Hoa',
-    },
-    {
-      id: 2,
-      title: 'Phấn Hoa Ong chứa hơn 250 chất hoạt tính sinh học',
-      date: '07 Thg 7',
-      image: 'https://via.placeholder.com/400x250/f0b12b/ffffff?text=Phan+Hoa',
-    },
-    {
-      id: 3,
-      title: 'Tại Sao Mật Ong Nguyên Chất Bị loãng vào mùa hè ???',
-      date: '06 Thg 6',
-      image: 'https://via.placeholder.com/400x250/1c3138/ffffff?text=Mat+Ong',
-    }
-  ];
+  const [newsList, setNewsList] = useState<any[]>([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const { data } = await api.get('/news');
+        // Filter only active news and limit to 3 items for the home page
+        const activeNews = data.filter((item: any) => item.isActive).slice(0, 3);
+        setNewsList(activeNews);
+      } catch (error) {
+        console.error('Error fetching news:', error);
+      }
+    };
+    fetchNews();
+  }, []);
+
+  const resolveImageUrl = (url: string) => {
+    if (!url) return 'https://placehold.co/400x250?text=No+Image';
+    if (url.startsWith('http') || url.startsWith('data:')) return url;
+    const baseUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'http://localhost:5000';
+    return `${baseUrl}${url}`;
+  };
+
+  const formatDateToBadge = (dateString: string) => {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = date.getMonth() + 1;
+    return {
+      day: day,
+      month: `Thg ${month}`
+    };
+  };
 
   return (
     <section className="news-section">
@@ -30,28 +47,36 @@ function NewsSection() {
       </div>
 
       <div className="news-grid container">
-        {newsList.map(news => (
-          <div key={news.id} className="news-card">
-            <div className="news-image-wrapper">
-              <div className="news-date-badge">
-                <span className="date-day">{news.date.split(' ')[0]}</span>
-                <span className="date-month">{news.date.split(' ').slice(1).join(' ')}</span>
+        {newsList.map(news => {
+          const dateBadge = formatDateToBadge(news.createdAt || Date.now());
+          return (
+            <div key={news._id} className="news-card">
+              <div className="news-image-wrapper">
+                <div className="news-date-badge">
+                  <span className="date-day">{dateBadge.day}</span>
+                  <span className="date-month">{dateBadge.month}</span>
+                </div>
+                <img src={resolveImageUrl(news.image)} alt={news.title} className="news-image" />
               </div>
-              <img src={news.image} alt={news.title} className="news-image" />
+              <div className="news-content">
+                <h3 className="news-title">{news.title}</h3>
+                <button 
+                  className="news-btn"
+                  onClick={() => navigate(`/news/${news._id}`)}
+                >XEM THÊM</button>
+              </div>
             </div>
-            <div className="news-content">
-              <h3 className="news-title">{news.title}</h3>
-              <button className="news-btn">XEM THÊM</button>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
-      <div className="actions-row-simple">
-        <button className="nav-arrow-small">‹</button>
-        <span className="view-more-text">Xem thêm</span>
-        <button className="nav-arrow-small">›</button>
-      </div>
+      {newsList.length > 0 && (
+        <div className="actions-row-simple">
+          <button className="nav-arrow-small">‹</button>
+          <span className="view-more-text">Xem thêm</span>
+          <button className="nav-arrow-small">›</button>
+        </div>
+      )}
     </section>
   );
 }

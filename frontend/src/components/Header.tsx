@@ -302,8 +302,9 @@ function Header() {
             </div>
           ) : (
             <div className="flex items-center gap-3 mr-4 hidden md:flex">
-              <Link to="/login" className="text-sm font-medium text-gray-700 hover:text-amber-600 transition-colors">Đăng nhập</Link>
-              <Link to="/register" className="text-sm font-medium bg-amber-600 text-white px-4 py-1.5 rounded-full hover:bg-amber-700 transition-colors">Đăng ký</Link>
+              <Link to="/login" className="header-login-btn">
+                <span>Đăng nhập</span>
+              </Link>
             </div>
           )}
           <button

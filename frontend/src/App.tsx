@@ -14,6 +14,8 @@ import CategoryList from './pages/admin/CategoryList';
 import BannerList from './pages/admin/BannerList';
 import OrderList from './pages/admin/OrderList';
 import OrderDetail from './pages/admin/OrderDetail';
+import NewsList from './pages/admin/NewsList';
+import NewsDetailPage from './pages/NewsDetailPage';
 import ProductListPage from './pages/ProductListPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import CartPage from './pages/CartPage';
@@ -33,6 +35,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/products" element={<ProductListPage />} />
         <Route path="/products/:id" element={<ProductDetailPage />} />
+        <Route path="/news/:id" element={<NewsDetailPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
         <Route path="/contact" element={<ContactPage />} />
@@ -50,6 +53,7 @@ function App() {
             <Route path="banners" element={<BannerList />} />
             <Route path="orders" element={<OrderList />} />
             <Route path="orders/:id" element={<OrderDetail />} />
+            <Route path="news" element={<NewsList />} />
           </Route>
         </Route>
       </Routes>

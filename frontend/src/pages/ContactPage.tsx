@@ -155,7 +155,7 @@ const ContactPage = () => {
                 <div>
                   <h3 className="contact-info-label">TỔNG ĐÀI HỖ TRỢ:</h3>
                   <p className="contact-info-text">
-                    0912831964
+                    096 325 8186
                   </p>
                 </div>
               </div>

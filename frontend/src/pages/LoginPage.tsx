@@ -5,8 +5,8 @@ import { toast } from 'react-toastify';
 import { MdOutlineMailOutline } from 'react-icons/md';
 import { FiLock } from 'react-icons/fi';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
-import { FcGoogle } from 'react-icons/fc';
-import { FaFacebook } from 'react-icons/fa';
+// import { FcGoogle } from 'react-icons/fc';
+// import { FaFacebook } from 'react-icons/fa';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -90,7 +90,7 @@ const LoginPage = () => {
     return (
         <div className="login-page-wrapper">
             <div className="login-card">
-                <h1 className="login-brand-title">NGỌC TRANG</h1>
+                <Link to="/" ><h1 className="login-brand-title">NGỌC TRANG</h1></Link>
                 <h2 className="login-welcome">Chào mừng bạn trở lại</h2>
                 <p className="login-subtitle">
                     Tiếp tục hành trình khám phá tinh túy mật ong Ngọc Trang
@@ -131,7 +131,7 @@ const LoginPage = () => {
                         {errors.password && <p className="field-error-text">{errors.password}</p>}
                     </div>
 
-                    <div className="login-options">
+                    {/* <div className="login-options">
                         <label className="login-checkbox-group">
                             <input type="checkbox" />
                             Ghi nhớ đăng nhập
@@ -139,7 +139,7 @@ const LoginPage = () => {
                         <Link to="#" className="login-forgot-link">
                             Quên mật khẩu?
                         </Link>
-                    </div>
+                    </div> */}
 
                     <button
                         type="submit"
@@ -150,7 +150,7 @@ const LoginPage = () => {
                     </button>
                 </form>
 
-                <div className="login-divider">
+                {/* <div className="login-divider">
                     Hoặc tiếp tục với
                 </div>
 
@@ -161,7 +161,7 @@ const LoginPage = () => {
                     <button className="login-social-btn" type="button">
                         <FaFacebook style={{ color: '#1877F2' }} />
                     </button>
-                </div>
+                </div> */}
 
                 <div className="login-register-text">
                     Chưa có tài khoản?{' '}

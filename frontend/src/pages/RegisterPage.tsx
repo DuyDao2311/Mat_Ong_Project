@@ -151,7 +151,7 @@ const RegisterPage = () => {
     return (
         <div className="login-page-wrapper" style={{ minHeight: '100vh', height: 'auto', padding: '40px 20px', overflowY: 'auto' }}>
             <div className="login-card">
-                <h1 className="login-brand-title" style={{ marginBottom: '15px' }}>NGỌC TRANG</h1>
+                <Link to="/" ><h1 className="login-brand-title" style={{ marginBottom: '15px' }}>NGỌC TRANG</h1></Link>
                 <p className="login-subtitle" style={{ marginBottom: '25px' }}>
                     Khám phá tinh túy mật ong từ cao nguyên đá Đồng Văn
                 </p>

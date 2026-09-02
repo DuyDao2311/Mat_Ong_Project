@@ -19,7 +19,7 @@ function Footer() {
           </Link>
           <ul className="contact-list">
             <li><FaHome size={20} />&nbsp;Địa chỉ: Thôn Đồng Thanh, Xã Đồng Văn, Tỉnh Tuyên Quang</li>
-            <li><FaPhoneAlt size={20} />&nbsp;Tổng đài hỗ trợ: 091.234.5678</li>
+            <li><FaPhoneAlt size={20} />&nbsp;Tổng đài hỗ trợ: 096 325 8186</li>
             <li><IoMdMail size={20} />&nbsp;Email: info@matongtunhien.com</li>
           </ul>
           <div style={{ marginTop: '45px' }}>
@@ -38,12 +38,11 @@ function Footer() {
         <div className="footer-col links-col">
           <h3 className="footer-heading">CHÍNH SÁCH</h3>
           <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Giới thiệu</a></li>
-            <li><a href="#" className="text-orange">Sản phẩm</a></li>
-            <li><a href="#">Chính sách</a></li>
-            <li><a href="#">Thông tin Cổ đông</a></li>
-            <li><a href="#">Liên hệ</a></li>
+            <li><a href="/">Home</a></li>
+            <li><a href="/">Giới thiệu</a></li>
+            <li><a href="/products" className="text-orange">Sản phẩm</a></li>
+            <li><a href="/">Chính sách</a></li>
+            <li><a href="/contact">Liên hệ</a></li>
           </ul>
         </div>
 
@@ -63,7 +62,7 @@ function Footer() {
           <h3 className="footer-heading">FANPAGE FACEBOOK</h3>
           <div className="fanpage-placeholder">
             <a href="https://www.facebook.com/profile.php?id=61586230476406" target="_blank" rel="noopener noreferrer" className="fanpage-header" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <span className="logo-mini">🐝</span>
+              <span className="logo-mini"><img src={logoImg} alt="Mật Ong Núi Đá Logo" /></span>
               <div>
                 <div className="fanpage-name">Mật ong núi đá Đồng Văn - Ngọc Trang</div>
                 {/* <div className="fanpage-likes">Theo dõi Trang</div> */}

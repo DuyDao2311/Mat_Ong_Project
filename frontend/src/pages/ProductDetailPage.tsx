@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { FaStar, FaStarHalfAlt, FaRegStar, FaCheck, FaChevronRight } from 'react-icons/fa';
 import { BsDroplet, BsFlower1 } from 'react-icons/bs';
 import { IoCartOutline } from "react-icons/io5";
@@ -9,9 +9,11 @@ import Footer from '../components/Footer';
 import ProductCardV2 from '../components/ProductCardV2';
 import { useContext } from 'react';
 import { CartContext } from '../context/CartContext';
+import { AuthContext } from '../context/AuthContext';
 
 function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [product, setProduct] = useState<any>(null);
   const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -20,11 +22,62 @@ function ProductDetailPage() {
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('description');
   const cartContext = useContext(CartContext) as any;
+  const authContext = useContext(AuthContext) as any;
+  const user = authContext?.user;
+
+  const [rating, setRating] = useState(5);
+  const [comment, setComment] = useState('');
+  const [reviewLoading, setReviewLoading] = useState(false);
+  const [reviewError, setReviewError] = useState('');
+  const [reviewSuccess, setReviewSuccess] = useState(false);
+
+  const submitReviewHandler = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user) return;
+    setReviewLoading(true);
+    setReviewError('');
+    setReviewSuccess(false);
+
+    try {
+      await api.post(
+        `/products/${id}/reviews`,
+        { rating, comment },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+      setReviewSuccess(true);
+      setRating(5);
+      setComment('');
+      
+      // refetch product
+      const { data } = await api.get(`/products/${id}`);
+      setProduct(data);
+      
+    } catch (error: any) {
+      setReviewError(error.response?.data?.message || 'Có lỗi xảy ra');
+    } finally {
+      setReviewLoading(false);
+    }
+  };
 
   const handleAddToCart = () => {
     if (cartContext?.addToCart) {
       cartContext.addToCart(product, quantity);
     }
+  };
+
+  const handleBuyNow = () => {
+    navigate('/checkout', {
+      state: {
+        buyNowItem: {
+          product,
+          quantity
+        }
+      }
+    });
   };
 
   const resolveImageUrl = (url: string) => {
@@ -194,9 +247,9 @@ function ProductDetailPage() {
 
             <div className="pdp-rating-row">
               <div className="pdp-stars">
-                {renderStars(product.rating || 4.5)}
+                {renderStars(product.rating || 0)}
               </div>
-              <span className="pdp-review-count">({product.numReviews || 158} đánh giá)</span>
+              <span className="pdp-review-count">({product.numReviews || 0} đánh giá)</span>
               <span style={{ margin: '0 8px', color: '#ccc' }}>|</span>
               <span className="pdp-sold-count" style={{ color: '#666', fontSize: '14px' }}>
                 Đã bán: {product.sold || 0}
@@ -250,6 +303,11 @@ function ProductDetailPage() {
                 <button className="pdp-add-cart-btn" id="pdp-add-to-cart" onClick={handleAddToCart}>
                   THÊM VÀO GIỎ HÀNG <IoCartOutline className="pdp-cart-icon" />
                 </button>
+
+                {/* Buy Now Button */}
+                <button className="pdp-buy-now-btn" id="pdp-buy-now" onClick={handleBuyNow}>
+                  MUA NGAY
+                </button>
               </div>
             </div>
 
@@ -298,7 +356,7 @@ function ProductDetailPage() {
               className={`pdp-tab-btn ${activeTab === 'reviews' ? 'active' : ''}`}
               onClick={() => setActiveTab('reviews')}
             >
-              Đánh giá <span className="pdp-tab-badge">{product.numReviews || 158}</span>
+              Đánh giá <span className="pdp-tab-badge">{product.numReviews || 0}</span>
             </button>
           </div>
 
@@ -382,17 +440,91 @@ function ProductDetailPage() {
               <div className="pdp-tab-reviews">
                 <div className="pdp-reviews-summary">
                   <div className="pdp-reviews-big-score">
-                    <span className="pdp-big-number">{product.rating || 4.5}</span>
+                    <span className="pdp-big-number">{(product.rating || 0).toFixed(1)}</span>
                     <span className="pdp-big-label">trên 5</span>
                   </div>
                   <div className="pdp-reviews-stars-summary">
-                    {renderStars(product.rating || 4.5)}
-                    <span className="pdp-total-reviews">{product.numReviews || 158} đánh giá</span>
+                    {renderStars(product.rating || 0)}
+                    <span className="pdp-total-reviews">{product.numReviews || 0} đánh giá</span>
                   </div>
                 </div>
-                <div className="pdp-reviews-empty">
-                  <p>Chưa có đánh giá chi tiết nào cho sản phẩm này.</p>
-                  <button className="pdp-write-review-btn">Viết đánh giá đầu tiên</button>
+
+                <div className="pdp-reviews-list">
+                  {product.reviews && product.reviews.length > 0 ? (
+                    product.reviews.map((review: any) => (
+                      <div key={review._id} className="pdp-review-item">
+                        <div className="pdp-review-item-header">
+                          <strong className="pdp-review-item-name">{review.name}</strong>
+                          <div className="pdp-stars pdp-review-item-stars">
+                            {renderStars(review.rating)}
+                          </div>
+                        </div>
+                        <span className="pdp-review-item-date">
+                          {new Date(review.createdAt).toLocaleDateString('vi-VN')}
+                        </span>
+                        <p className="pdp-review-item-comment">{review.comment}</p>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="pdp-reviews-empty">
+                      <p>Chưa có đánh giá chi tiết nào cho sản phẩm này.</p>
+                    </div>
+                  )}
+                </div>
+
+                <div className="pdp-review-form-container">
+                  <h3 className="pdp-review-form-title">Viết đánh giá của bạn</h3>
+                  
+                  {user && product.reviews?.some((r: any) => r.user === user._id) ? (
+                    <div className="pdp-review-already-reviewed">
+                      <p>Bạn đã đánh giá sản phẩm này. Cảm ơn phản hồi của bạn!</p>
+                    </div>
+                  ) : user ? (
+                    <form onSubmit={submitReviewHandler} className="pdp-review-form">
+                      {reviewError && <div className="pdp-review-error">{reviewError}</div>}
+                      {reviewSuccess && <div className="pdp-review-success">Đánh giá của bạn đã được gửi thành công!</div>}
+                      
+                      <div className="pdp-review-form-group">
+                        <label className="pdp-review-form-label">Xếp hạng</label>
+                        <select 
+                          value={rating} 
+                          onChange={(e) => setRating(Number(e.target.value))}
+                          className="pdp-review-form-select"
+                        >
+                          <option value="5">5 - Tuyệt vời</option>
+                          <option value="4">4 - Rất tốt</option>
+                          <option value="3">3 - Khá</option>
+                          <option value="2">2 - Kém</option>
+                          <option value="1">1 - Rất kém</option>
+                        </select>
+                      </div>
+                      
+                      <div className="pdp-review-form-group">
+                        <label className="pdp-review-form-label">Nội dung đánh giá</label>
+                        <textarea
+                          value={comment}
+                          onChange={(e) => setComment(e.target.value)}
+                          rows={4}
+                          required
+                          placeholder="Chia sẻ trải nghiệm của bạn về sản phẩm này..."
+                          className="pdp-review-form-textarea"
+                        ></textarea>
+                      </div>
+                      
+                      <button 
+                        type="submit" 
+                        disabled={reviewLoading}
+                        className="pdp-review-form-submit"
+                      >
+                        {reviewLoading ? 'Đang gửi...' : 'Gửi đánh giá'}
+                      </button>
+                    </form>
+                  ) : (
+                    <div className="pdp-review-login-prompt">
+                      <p>Vui lòng đăng nhập để lại đánh giá của bạn.</p>
+                      <Link to="/login" className="pdp-review-login-btn">Đăng nhập ngay</Link>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
