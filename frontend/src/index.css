@@ -1720,6 +1720,10 @@ button {
   .footer-inner-new {
     grid-template-columns: 1fr;
   }
+
+  .news-grid .news-card:nth-child(n+2) {
+    display: none;
+  }
 }
 
 /* ========================================

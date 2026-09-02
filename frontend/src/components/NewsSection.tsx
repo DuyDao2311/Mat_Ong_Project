@@ -70,13 +70,13 @@ function NewsSection() {
         })}
       </div>
 
-      {newsList.length > 0 && (
+      {/* {newsList.length > 0 && (
         <div className="actions-row-simple">
           <button className="nav-arrow-small">‹</button>
           <span className="view-more-text">Xem thêm</span>
           <button className="nav-arrow-small">›</button>
         </div>
-      )}
+      )} */}
     </section>
   );
 }
