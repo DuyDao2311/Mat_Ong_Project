@@ -51,7 +51,7 @@ function NewsSection() {
           const dateBadge = formatDateToBadge(news.createdAt || Date.now());
           return (
             <div key={news._id} className="news-card">
-              <div className="news-image-wrapper">
+              <div className="news-image-wrapper" onClick={() => navigate(`/news/${news._id}`)}>
                 <div className="news-date-badge">
                   <span className="date-day">{dateBadge.day}</span>
                   <span className="date-month">{dateBadge.month}</span>
@@ -60,7 +60,7 @@ function NewsSection() {
               </div>
               <div className="news-content">
                 <h3 className="news-title">{news.title}</h3>
-                <button 
+                <button
                   className="news-btn"
                   onClick={() => navigate(`/news/${news._id}`)}
                 >XEM THÊM</button>

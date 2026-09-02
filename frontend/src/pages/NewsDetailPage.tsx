@@ -19,6 +19,8 @@ const NewsDetailPage = () => {
     const navigate = useNavigate();
     const [news, setNews] = useState<any>(null);
     const [recentNews, setRecentNews] = useState<any[]>([]);
+    const [allActiveNews, setAllActiveNews] = useState<any[]>([]);
+    const [searchQuery, setSearchQuery] = useState('');
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -30,10 +32,11 @@ const NewsDetailPage = () => {
 
                 // Fetch recent news for sidebar
                 const recentRes = await api.get('/news');
-                const activeRecent = recentRes.data
-                    .filter((item: any) => item.isActive && item._id !== id)
-                    .slice(0, 4);
-                setRecentNews(activeRecent);
+                const activeAll = recentRes.data
+                    .filter((item: any) => item.isActive && item._id !== id);
+
+                setAllActiveNews(activeAll);
+                setRecentNews(activeAll.slice(0, 4));
             } catch (error) {
                 console.error('Error fetching news:', error);
             } finally {
@@ -60,6 +63,10 @@ const NewsDetailPage = () => {
         const year = date.getFullYear();
         return `${day}/${month}/${year}`;
     };
+
+    const displayedNews = searchQuery.trim() !== ''
+        ? allActiveNews.filter(item => item.title.toLowerCase().includes(searchQuery.toLowerCase()))
+        : recentNews;
 
     if (loading) return <div style={{ padding: '100px', textAlign: 'center' }}>Đang tải tin tức...</div>;
     if (!news) return <div style={{ padding: '100px', textAlign: 'center' }}>Không tìm thấy bài viết</div>;
@@ -110,15 +117,22 @@ const NewsDetailPage = () => {
                     <div className="sidebar-widget">
                         <h3 className="sidebar-widget-title">Tìm kiếm</h3>
                         <div className="sidebar-search-box">
-                            <input type="text" placeholder="Tìm kiếm bài viết..." />
+                            <input
+                                type="text"
+                                placeholder="Tìm kiếm bài viết..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                            />
                             <button><FaSearch /></button>
                         </div>
                     </div>
 
                     <div className="sidebar-widget">
-                        <h3 className="sidebar-widget-title">Bài viết mới</h3>
+                        <h3 className="sidebar-widget-title">
+                            {searchQuery.trim() !== '' ? 'Kết quả tìm kiếm' : 'Bài viết mới'}
+                        </h3>
                         <div className="sidebar-recent-list">
-                            {recentNews.map(item => (
+                            {displayedNews.map(item => (
                                 <Link to={`/news/${item._id}`} key={item._id} className="sidebar-recent-item">
                                     <div className="sidebar-recent-img">
                                         <img src={resolveImageUrl(item.image)} alt={item.title} />
@@ -129,7 +143,11 @@ const NewsDetailPage = () => {
                                     </div>
                                 </Link>
                             ))}
-                            {recentNews.length === 0 && <p style={{ fontSize: '0.85rem' }}>Chưa có bài viết khác.</p>}
+                            {displayedNews.length === 0 && (
+                                <p style={{ fontSize: '0.85rem' }}>
+                                    {searchQuery.trim() !== '' ? 'Không tìm thấy bài viết nào.' : 'Chưa có bài viết khác.'}
+                                </p>
+                            )}
                         </div>
                     </div>
                 </aside>
