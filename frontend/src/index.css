@@ -1651,9 +1651,9 @@ button {
   color: var(--orange);
 }
 
-.links-col ul li a.text-orange {
+/* .links-col ul li a.text-orange {
   color: var(--orange);
-}
+} */
 
 .fanpage-placeholder {
   background: white;
@@ -6616,7 +6616,7 @@ textarea.admin-input {
   .policy-section {
     padding: 20px;
   }
-  
+
   .policy-title {
     font-size: 1.8rem;
   }

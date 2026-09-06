@@ -39,9 +39,9 @@ function Footer() {
           <h3 className="footer-heading">CHÍNH SÁCH</h3>
           <ul>
             <li><a href="/">Home</a></li>
-            <li><a href="/">Giới thiệu</a></li>
+            <li><a href="/about">Giới thiệu</a></li>
             <li><a href="/products" className="text-orange">Sản phẩm</a></li>
-            <li><a href="/">Chính sách</a></li>
+            <li><a href="/policy">Chính sách</a></li>
             <li><a href="/contact">Liên hệ</a></li>
           </ul>
         </div>
@@ -52,7 +52,6 @@ function Footer() {
             <li><a href="#">Tìm kiếm</a></li>
             <li><a href="#">Giới thiệu</a></li>
             <li><a href="#">Chính sách đổi trả</a></li>
-            <li><a href="#">Chính sách bảo mật</a></li>
             <li><a href="#">Điều khoản dịch vụ</a></li>
             <li><a href="#">Tư vấn sử dụng</a></li>
           </ul>
