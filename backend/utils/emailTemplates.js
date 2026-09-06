@@ -253,3 +253,78 @@ export const adminOrderPaidTemplate = (order) => {
 
   return { html, text };
 };
+
+export const contactConfirmationTemplate = (contact) => {
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
+      <h2 style="color: #f59e0b; text-align: center;">Cảm ơn bạn đã liên hệ!</h2>
+      <p>Xin chào <strong>${contact.name}</strong>,</p>
+      <p>Mật Ong Ngọc Trang đã nhận được tin nhắn của bạn với nội dung:</p>
+      
+      <div style="background-color: #f9f9f9; padding: 15px; border-left: 4px solid #f59e0b; margin: 20px 0; font-style: italic;">
+        "${contact.message}"
+      </div>
+
+      <p>Chúng tôi sẽ phản hồi bạn qua email hoặc số điện thoại <strong>${contact.phone}</strong> trong thời gian sớm nhất.</p>
+      <p style="margin-top: 30px; font-size: 14px; text-align: center; color: #777;">
+        Trân trọng,<br>
+        <strong>Đội ngũ Mật Ong Ngọc Trang</strong>
+      </p>
+    </div>
+  `;
+
+  const text = `Xin chào ${contact.name},\nMật Ong Ngọc Trang đã nhận được tin nhắn của bạn.\nChúng tôi sẽ phản hồi bạn trong thời gian sớm nhất.\nTrân trọng.`;
+  return { html, text };
+};
+
+export const adminNewContactTemplate = (contact) => {
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
+      <h2 style="color: #3b82f6; text-align: center;">Thông báo: Tin nhắn liên hệ mới</h2>
+      <p>Có một khách hàng vừa gửi tin nhắn liên hệ từ trang web:</p>
+      
+      <ul style="list-style: none; padding: 0;">
+        <li style="margin-bottom: 10px;"><strong>Họ tên:</strong> ${contact.name}</li>
+        <li style="margin-bottom: 10px;"><strong>Email:</strong> ${contact.email}</li>
+        <li style="margin-bottom: 10px;"><strong>SĐT:</strong> ${contact.phone}</li>
+      </ul>
+
+      <h3 style="border-bottom: 2px solid #3b82f6; padding-bottom: 5px;">Nội dung tin nhắn:</h3>
+      <div style="background-color: #eff6ff; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+        ${contact.message}
+      </div>
+
+      <p>Vui lòng đăng nhập vào trang quản trị để xem và phản hồi khách hàng.</p>
+    </div>
+  `;
+
+  const text = `Khách hàng ${contact.name} (${contact.phone}, ${contact.email}) vừa gửi tin nhắn: ${contact.message}\nVui lòng kiểm tra trang quản trị.`;
+  return { html, text };
+};
+
+export const adminReplyContactTemplate = (contact, replyMessage) => {
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
+      <h2 style="color: #f59e0b; text-align: center;">Phản hồi từ Mật Ong Ngọc Trang</h2>
+      <p>Xin chào <strong>${contact.name}</strong>,</p>
+      <p>Cảm ơn bạn đã liên hệ với chúng tôi. Mật Ong Ngọc Trang xin phản hồi cho tin nhắn của bạn:</p>
+
+      <div style="background-color: #f9f9f9; padding: 15px; border-left: 4px solid #ddd; margin: 15px 0; font-style: italic; color: #666;">
+        <strong>Tin nhắn của bạn:</strong><br>"${contact.message}"
+      </div>
+
+      <div style="background-color: #ecfdf5; padding: 15px; border-left: 4px solid #10b981; margin: 15px 0;">
+        <strong>Phản hồi:</strong><br>${replyMessage}
+      </div>
+
+      <p>Nếu bạn cần thêm thông tin, vui lòng liên hệ lại với chúng tôi.</p>
+      <p style="margin-top: 30px; font-size: 14px; text-align: center; color: #777;">
+        Trân trọng,<br>
+        <strong>Đội ngũ Mật Ong Ngọc Trang</strong>
+      </p>
+    </div>
+  `;
+
+  const text = `Xin chào ${contact.name},\nCảm ơn bạn đã liên hệ.\n\nTin nhắn của bạn: "${contact.message}"\n\nPhản hồi: ${replyMessage}\n\nTrân trọng,\nĐội ngũ Mật Ong Ngọc Trang`;
+  return { html, text };
+};

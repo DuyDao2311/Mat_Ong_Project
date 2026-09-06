@@ -15,6 +15,7 @@ import BannerList from './pages/admin/BannerList';
 import OrderList from './pages/admin/OrderList';
 import OrderDetail from './pages/admin/OrderDetail';
 import NewsList from './pages/admin/NewsList';
+import ContactList from './pages/admin/ContactList';
 import NewsDetailPage from './pages/NewsDetailPage';
 import ProductListPage from './pages/ProductListPage';
 import ProductDetailPage from './pages/ProductDetailPage';
@@ -22,6 +23,8 @@ import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import ContactPage from './pages/ContactPage';
 import OrderSuccessPage from './pages/OrderSuccessPage';
+import AboutPage from './pages/AboutPage';
+import PolicyPage from './pages/PolicyPage';
 import ScrollToTop from './components/ScrollToTop';
 import './App.css';
 
@@ -39,6 +42,8 @@ function App() {
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/policy" element={<PolicyPage />} />
         <Route path="/order-success" element={<OrderSuccessPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
@@ -54,6 +59,7 @@ function App() {
             <Route path="orders" element={<OrderList />} />
             <Route path="orders/:id" element={<OrderDetail />} />
             <Route path="news" element={<NewsList />} />
+            <Route path="contacts" element={<ContactList />} />
           </Route>
         </Route>
       </Routes>

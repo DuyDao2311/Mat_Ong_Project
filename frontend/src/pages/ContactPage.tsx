@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import Header from '../components/Header';
+import { toast } from 'react-toastify';
+import api from '../services/api';
 import Footer from '../components/Footer';
 import { Link } from 'react-router-dom';
 import { FaMapMarkerAlt, FaEnvelope, FaPhoneAlt, FaArrowRight, FaChevronRight, FaDirections, FaExternalLinkAlt } from 'react-icons/fa';
@@ -15,6 +17,7 @@ const ContactPage = () => {
     phone: '',
     message: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
@@ -23,11 +26,43 @@ const ContactPage = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log(formData);
-    alert('Tin nhắn đã được gửi!');
+    
+    // Basic validation
+    if (!formData.name.trim() || !formData.email.trim() || !formData.phone.trim() || !formData.message.trim()) {
+      toast.error('Vui lòng điền đầy đủ thông tin.');
+      return;
+    }
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      toast.error('Email không hợp lệ.');
+      return;
+    }
+
+    const phoneRegex = /^[0-9]{9,12}$/;
+    if (!phoneRegex.test(formData.phone)) {
+      toast.error('Số điện thoại không hợp lệ.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      await api.post('/contacts', formData);
+      toast.success('Cảm ơn bạn đã liên hệ! Chúng tôi sẽ phản hồi sớm nhất có thể.');
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        message: ''
+      });
+    } catch (error: any) {
+      console.error('Contact submit error:', error);
+      toast.error(error.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại sau.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -258,8 +293,10 @@ const ContactPage = () => {
                 <button
                   type="submit"
                   className="contact-submit-btn"
+                  disabled={isSubmitting}
+                  style={{ opacity: isSubmitting ? 0.7 : 1, cursor: isSubmitting ? 'not-allowed' : 'pointer' }}
                 >
-                  GỬI TIN NHẮN <FaArrowRight className="contact-submit-icon" />
+                  {isSubmitting ? 'ĐANG GỬI...' : 'GỬI TIN NHẮN'} {!isSubmitting && <FaArrowRight className="contact-submit-icon" />}
                 </button>
               </form>
             </div>

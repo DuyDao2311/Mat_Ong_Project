@@ -253,11 +253,11 @@ function Header() {
           )}
 
           <Link to="/" className={location.pathname === '/' ? "active" : ""}>HOME</Link>
-          <a href="#">GIỚI THIỆU</a>
+          <Link to="/about" className={location.pathname === '/about' ? "active" : ""}>GIỚI THIỆU</Link>
           <Link to="/products" className={location.pathname === '/products' ? "active" : ""}>
             SẢN PHẨM
           </Link>
-          <a href="#">CHÍNH SÁCH</a>
+          <Link to="/policy" className={location.pathname === '/policy' ? "active" : ""}>CHÍNH SÁCH</Link>
           <Link to="/contact" className={location.pathname === '/contact' ? "active" : ""}>LIÊN HỆ</Link>
 
           {/* Mobile Auth Links */}

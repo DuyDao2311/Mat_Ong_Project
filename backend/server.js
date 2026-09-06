@@ -31,6 +31,7 @@ import orderRoutes from './routes/orderRoutes.js';
 import searchRoutes from './routes/searchRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import newsRoutes from './routes/newsRoutes.js';
+import contactRoutes from './routes/contactRoutes.js';
 // Routes
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
@@ -42,6 +43,7 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/news', newsRoutes);
+app.use('/api/contacts', contactRoutes);
 const __dirname = path.resolve();
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
